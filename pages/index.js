@@ -15,7 +15,7 @@ const Home = ({ products, bannerData }) => {
         Best Selling Products
       </h2>
       <p> 
-        Speakers of many variations
+        Make up and cosmetics of many variations
       </p>
     </div>
 

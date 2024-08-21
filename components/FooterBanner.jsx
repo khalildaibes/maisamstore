@@ -19,9 +19,10 @@ const FooterBanner = ({
   },
 }) => {
   return (
-    <div className="footer-banner-container">
+    <div className="footer-banner-container" >
       <div className="banner-desc">
         <div className="left">
+
           <p>{discount}</p>
           <h3>{largeText1}</h3>
           <h3>{largeText2}</h3>
@@ -36,11 +37,11 @@ const FooterBanner = ({
           </Link>
         </div>
 
-        <img 
-          src={urlFor(image)} className="footer-banner-image"
-        />
+        
       </div>
     </div>
+
+    
   );
 };
 

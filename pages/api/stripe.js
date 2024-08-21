@@ -14,9 +14,9 @@ export default async function handler(req, res) {
         payment_method_types: ["card"],
         billing_address_collection: "auto",
         //USD Free Shipping
-        // shipping_options: [{ shipping_rate: "shr_1LC3NfSCw2fpMkHGwQR5ryDk" }],
+        shipping_options: [],
         //INR Free shipping
-        shipping_options: [{ shipping_rate: "shr_1LCIT9SCw2fpMkHGQlJ86ylY" }],
+        shipping_options: [],
         line_items: req.body.map((item) => {
           const img = item.image[0].asset._ref;
           const newImage = img
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
           return {
             price_data: {
-              currency: "INR",
+              currency: "ILS",
               product_data: {
                 name: item.name,
                 images: [newImage],

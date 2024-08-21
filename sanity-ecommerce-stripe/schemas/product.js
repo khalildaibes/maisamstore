@@ -20,6 +20,7 @@ export default {
             title: 'Name', 
             type: 'string', 
         }, 
+       
         { 
             //Slug/URL for the product
             name: 'slug', 
@@ -41,6 +42,34 @@ export default {
             name: 'details', 
             title: 'Details', 
             type: 'string', 
-        }
+        },
+        {
+            name: 'colors',
+            title: 'Colors',
+            type: 'array',
+            of: [
+              {
+                type: 'object',
+                name: 'colorOption',
+                title: 'Color Option',
+                fields: [
+                  {
+                    name: 'name',
+                    title: 'Color Name',
+                    type: 'string'
+                  },
+                  {
+                    name: 'image',
+                    title: 'Image',
+                    type: 'image',
+                    options: {
+                      hotspot: true
+                    }
+                  }
+                ]
+              }
+            ],
+            validation: Rule => Rule.optional(), // Makes the field optional
+          }
     ]
 }
