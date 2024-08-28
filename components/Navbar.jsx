@@ -3,17 +3,18 @@ import Link from 'next/link';
 import { AiOutlineShopping, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { Cart } from '.';
 import { useStateContext } from '../context/StateContext';
-import logo from '../maisamnakeuplogo.png'; // Adjust the path according to your project structure
+
+// Import Image from next/image if you want Next.js optimization (Optional)
+import Image from 'next/image';
+
+// If using a direct import, adjust the path accordingly
+// import logo from 'assets/Maisamnakeuplogo.png'; // This would be if the logo is in src/assets
 
 const Navbar = () => {
   const { showCart, setShowCart, totalQuantities } = useStateContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [isNavMenuOpen, setIsNavMenuOpen] = React.useState(false);
 
-  const toggleNavMenu = () => {
-    setIsNavMenuOpen(!isMenuOpen);
-  };
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768);
   };
@@ -26,27 +27,36 @@ const Navbar = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
     <div className="navbar-container">
-      <img src={logo} className='logo-img'/> 
+      {/* If the image is in the public folder, use the following */}
+      <Link href="/" passHref>
+        {/* The img tag should have a cursor style to indicate it is clickable */}
+        <img
+          src="/maisamnakeuplogo.png"
+          className="logo-img"
+          alt="Logo"
+          style={{ cursor: 'pointer' }}
+        />
+      </Link>
+      {/* If you prefer to use Next.js Image optimization, use the following */}
+      {/* <Image src="/maisamnakeuplogo.png" alt="Logo" width={150} height={50} className="logo-img" /> */}
 
-      
-    <nav className="navbar">
-
-      <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-        <Link href="/categories/palettes">Palettes</Link>
-        <Link href="/categories/mascara">Mascara</Link>
-        <Link href="/categories/eyeshadow">Eyeshadow</Link>
-        <Link href="/categories/blush">Blush</Link>
-        <Link href="/categories/lipstick">Lipstick</Link>
-        <Link href="/categories/concealer">Concealer</Link>
-      </div>
-    </nav>
-  
+      <nav className="navbar">
+        <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
+          <Link href="/catgeory_products?categoryName=palettes">Palettes</Link>
+          <Link href="/catgeory_products?categoryName=mascara">Mascara</Link>
+          <Link href="/catgeory_products?categoryName=eyeshadow">Eyeshadow</Link>
+          <Link href="/catgeory_products?categoryName=blush">Blush</Link>
+          <Link href="/catgeory_products?categoryName=lipstick">Lipstick</Link>
+          <Link href="/catgeory_products?categoryName=concealer">Concealer</Link>
+        </div>
+      </nav>
 
       <button type="button" className="cart-icon" onClick={() => setShowCart(true)}>
         <AiOutlineShopping />
@@ -54,12 +64,11 @@ const Navbar = () => {
       </button>
 
       {/* Hamburger Menu Icon */}
-      {isMobile&& (
-        <button type="button" className={`menu-icon ${isMobile ? 'active' : ''}`} onClick={toggleMenu}>
-        {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
-      </button>
+      {isMobile && (
+        <button type="button" className="menu-icon" onClick={toggleMenu}>
+          {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
+        </button>
       )}
-
 
       {/* Only show the Cart when setShowCart is true */}
       {showCart && <Cart />}

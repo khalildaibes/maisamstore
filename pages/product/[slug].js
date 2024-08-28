@@ -19,9 +19,15 @@ import { useStateContext } from '../../context/StateContext';
 
 
 const ProductDetails = ({ product, products}) => {
-const { image, name, details, price } = product;
+const { image, name, details, price, colors } = product;
+
 const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
 const [index, setIndex] = useState(0);
+const [selectedColor, setSelectedColor] = useState(null);
+
+const handleColorClick = (color) => {
+  setSelectedColor(color);
+};
 
 const handleBuyNow = () => { 
   onAdd(product, qty); 
@@ -67,7 +73,25 @@ const handleBuyNow = () => {
           <h4>Details: </h4>
           <p>{details}</p>
           <p className="price">₪ {price}</p>
-          <div className="quantity">
+          <div className="product-colors">
+            {colors && colors.map((item, index) => (
+              <div
+                key={index}
+                className="color-circle"
+                style={{ backgroundColor: item.name }}
+                title={item.name} // Tooltip to show the color name on hover
+                onClick={() => handleColorClick(item)} // Store the selected color on click
+              />
+            ))}
+            {selectedColor && (
+              <p>You selected: {<div
+                className="color-circle"
+                style={{ backgroundColor: selectedColor.name }}
+                title={selectedColor.name} // Tooltip to show the color name on hover
+              />}</p>
+            )}
+          </div>
+            <div className="quantity">
             <h3>Quantity:</h3>
             <p className="quantity-desc">
               {/* Minus button */}

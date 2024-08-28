@@ -15,11 +15,28 @@ export default {
             }
         }, 
         { 
+            //Image of the product 
+            name: 'categories', 
+            title: 'Categories', 
+            type: 'array', 
+            of: [{type: 'string'}], //Array 'of' images
+            options: { 
+                hotspot: true, 
+            }
+        }, 
+        { 
+            //Name of the product
+            name: 'quantity', 
+            title: 'Quantity', 
+            type: 'int', 
+        }, 
+        { 
             //Name of the product
             name: 'name', 
             title: 'Name', 
             type: 'string', 
         }, 
+        
        
         { 
             //Slug/URL for the product
@@ -57,6 +74,11 @@ export default {
                     name: 'name',
                     title: 'Color Name',
                     type: 'string'
+                  },
+                  {
+                    name: 'quantity',
+                    title: 'Quantity',
+                    type: 'int'
                   },
                   {
                     name: 'image',
