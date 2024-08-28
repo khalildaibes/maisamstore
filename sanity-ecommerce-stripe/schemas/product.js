@@ -28,7 +28,7 @@ export default {
             //Name of the product
             name: 'quantity', 
             title: 'Quantity', 
-            type: 'int', 
+            type: 'number', 
         }, 
         { 
             //Name of the product
@@ -78,7 +78,7 @@ export default {
                   {
                     name: 'quantity',
                     title: 'Quantity',
-                    type: 'int'
+                    type: 'number'
                   },
                   {
                     name: 'image',

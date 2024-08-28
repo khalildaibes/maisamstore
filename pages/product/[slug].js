@@ -1,39 +1,57 @@
-// Putting a [name] makes the file dynamic
-// File based routing
-
 import React, { useState } from "react";
-
 import {
   AiOutlineMinus,
   AiOutlinePlus,
   AiFillStar,
   AiOutlineStar,
+  AiOutlineCheck,
+  AiOutlineClose, // Import X icon
 } from "react-icons/ai";
-
 import { client, urlFor } from "../../lib/client";
-
 import { Product } from "../../components";
-
 import { useStateContext } from '../../context/StateContext'; 
+import translations from '../../translations/translations'; // Import translations
 
+const ProductDetails = ({ product, products }) => {
+  const { image, name, details, price, colors } = product;
+  const { decQty, incQty, qty, onAdd, setShowCart, language } = useStateContext(); // Assuming language is managed in context
+  const [index, setIndex] = useState(0);
+  const [selectedColor, setSelectedColor] = useState(null);
 
+  const handleColorClick = (color) => {
+    if (color.quantity > 0) {  // Only allow selection if the color quantity is greater than 0
+      setSelectedColor(color);
+    }
+  };
 
-const ProductDetails = ({ product, products}) => {
-const { image, name, details, price, colors } = product;
+  const handleAddToCart = () => {
+    if (colors != null) {
+      if (colors.length > 0 && !selectedColor) {
+        alert(translations[language].selectColorAlert);
+        return;
+      } else {
+        onAdd(product, qty, selectedColor);
+      }
+    } else {
+      onAdd(product, qty);
+    }
+  };
 
-const { decQty, incQty, qty, onAdd, setShowCart } = useStateContext();
-const [index, setIndex] = useState(0);
-const [selectedColor, setSelectedColor] = useState(null);
+  const handleBuyNow = () => {
+    if (colors != null) {
+      if (colors.length > 0 && !selectedColor) {
+        alert(translations[language].selectColorAlert);
+        return;
+      } else {
+        onAdd(product, qty, selectedColor);
+        setShowCart(true);
+      }
+    } else {
+      onAdd(product, qty);
+      setShowCart(true);
+    }
+  };
 
-const handleColorClick = (color) => {
-  setSelectedColor(color);
-};
-
-const handleBuyNow = () => { 
-  onAdd(product, qty); 
-
-  setShowCart(true); 
-}
   return (
     <div>
       <div className="product-detail-container">
@@ -49,8 +67,7 @@ const handleBuyNow = () => {
               <img
                 key={i}
                 src={urlFor(item)}
-                className=
-                {i === index ? 'small-image selected-image' : 'small-image'}
+                className={i === index ? 'small-image selected-image' : 'small-image'}
                 onMouseEnter={() => setIndex(i)}
               />
             ))}
@@ -67,60 +84,75 @@ const handleBuyNow = () => {
               <AiFillStar />
               <AiOutlineStar />
             </div>
-            {/* TODO(KHALIL) : change here to dynamic */}
-            <p>(20)</p>
+            {/* TODO: Make reviews dynamic */}
+            <p>{translations[language].reviews}</p>
           </div>
-          <h4>Details: </h4>
+          <h4>{translations[language].details}</h4>
           <p>{details}</p>
           <p className="price">₪ {price}</p>
+
           <div className="product-colors">
             {colors && colors.map((item, index) => (
               <div
                 key={index}
-                className="color-circle"
-                style={{ backgroundColor: item.name }}
-                title={item.name} // Tooltip to show the color name on hover
-                onClick={() => handleColorClick(item)} // Store the selected color on click
-              />
+                className={`color-circle ${item.quantity === 0 ? 'disabled' : ''}`}
+                style={{ backgroundColor: item.name, position: 'relative' }}
+                title={item.name}
+                onClick={() => handleColorClick(item)}
+              >
+                {item.quantity === 0 && (
+                  <AiOutlineClose
+                    style={{
+                      color: 'red', // 'X' sign for out of stock
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: '1.5rem', // Adjust the size as needed
+                    }}
+                  />
+                )}
+              </div>
             ))}
             {selectedColor && (
-              <p>You selected: {<div
-                className="color-circle"
-                style={{ backgroundColor: selectedColor.name }}
-                title={selectedColor.name} // Tooltip to show the color name on hover
-              />}</p>
+              <p>
+                {translations[language].selectedColor}
+                <div
+                  className="color-circle"
+                  style={{ backgroundColor: selectedColor.name }}
+                  title={selectedColor.name}
+                />
+              </p>
             )}
           </div>
-            <div className="quantity">
-            <h3>Quantity:</h3>
+
+          <div className="quantity">
+            <h3>{translations[language].quantity}</h3>
             <p className="quantity-desc">
-              {/* Minus button */}
-            <span className="minus" onClick={decQty}><AiOutlineMinus /></span> 
-            {/* Quantity display */}
+              <span className="minus" onClick={decQty}><AiOutlineMinus /></span>
               <span className="num">{qty}</span>
-              {/* Plus button */}
               <span className="plus" onClick={incQty}><AiOutlinePlus /></span>
             </p>
           </div>
-          <div className="buttons">
-            {/* Add to cart button */}
-          <button type="button" className="add-to-cart" onClick={() => onAdd(product, qty)}>Add to Cart</button>
 
+          <div className="buttons">
+            <button type="button" className="add-to-cart" onClick={handleAddToCart}>
+              {translations[language].addToCart}
+            </button>
             <button type="button" className="buy-now" onClick={handleBuyNow}>
-              Buy Now
+              {translations[language].buyNow}
             </button>
           </div>
         </div>
       </div>
-      
-      {/* Product banner for similar items to the selected items */}
+
       <div className="maylike-products-wrapper">
-        <h2>You may also like</h2>
+        <h2>{translations[language].youMayAlsoLike}</h2>
         <div className="marquee">
           <div className="maylike-products-container track">
-          {products.map((item) => (
-                <Product key={item._id} product={item} />
-              ))}
+            {products.map((item) => (
+              <Product key={item._id} product={item} />
+            ))}
           </div>
         </div>
       </div>
@@ -128,15 +160,14 @@ const handleBuyNow = () => {
   );
 };
 
-// getStaticProps function is used when the data required to render the page is available at runtime ahead of user request
+// Static path and prop fetching functions remain unchanged
 
 export const getStaticPaths = async () => {
   const query = `*[_type == "product"] {
     slug {
       current
     }
-  }
-  `;
+  }`;
 
   const products = await client.fetch(query);
 
@@ -152,15 +183,12 @@ export const getStaticPaths = async () => {
   };
 };
 
-//To fetch product details from thne product page we are on currently
 export const getStaticProps = async ({ params: { slug } }) => {
-  const query = `*[_type == "product" && slug.current == '${slug}'][0]`; //Fetching a particular product requested
-  const productsQuery = '*[_type == "product"]'; //Fetching similar products
+  const query = `*[_type == "product" && slug.current == '${slug}'][0]`;
+  const productsQuery = '*[_type == "product"]';
 
   const product = await client.fetch(query);
   const products = await client.fetch(productsQuery);
-
-  // console.log(product);
 
   return {
     props: { product, products },

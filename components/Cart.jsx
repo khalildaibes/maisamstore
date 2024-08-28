@@ -10,8 +10,8 @@ import { TiDeleteOutline } from "react-icons/ti";
 import { toast } from "react-hot-toast";
 import { useStateContext } from "../context/StateContext";
 import { urlFor } from "../lib/client";
-
 import getStripe from "../lib/getStripe";
+import translations from '../translations/translations'; // Import translations
 
 const Cart = () => {
   const cartRef = useRef();
@@ -22,6 +22,7 @@ const Cart = () => {
     setShowCart,
     toggleCartItemQuanitity,
     onRemove,
+    language, // Get language from context
   } = useStateContext();
 
   const handleCheckout = async () => {
@@ -35,14 +36,13 @@ const Cart = () => {
       body: JSON.stringify(cartItems),
     });
 
-    if (response.statusCode === 500) return; //Something went wrong
+    if (response.statusCode === 500) return; // Something went wrong
 
-    //Else
     const data = await response.json();
 
-    toast.loading("Redirecting...");
+    toast.loading(translations[language].redirecting); // Use translation text
 
-    stripe.redirectToCheckout({ sessionId: data.id }); //Redirect to stripe checkout
+    stripe.redirectToCheckout({ sessionId: data.id }); // Redirect to stripe checkout
   };
 
   return (
@@ -54,22 +54,22 @@ const Cart = () => {
           onClick={() => setShowCart(false)}
         >
           <AiOutlineLeft />
-          <span className="heading">Your Cart</span>
-          <span className="cart-num-items">({totalQuantities} items)</span>
+          <span className="heading">{translations[language].yourCart}</span>
+          <span className="cart-num-items">({totalQuantities} {translations[language].totalItems})</span>
         </button>
 
-        {/* Checking if cart is empty ?  */}
+        {/* Checking if cart is empty */}
         {cartItems.length < 1 && (
           <div className="empty-cart">
             <AiOutlineShopping size={150} />
-            <h3>Your shopping bag is empty</h3>
+            <h3>{translations[language].emptyCartMessage}</h3>
             <Link href="/">
               <button
                 type="button"
                 onClick={() => setShowCart(false)}
                 className="btn"
               >
-                Continue Shopping
+                {translations[language].continueShopping}
               </button>
             </Link>
           </div>
@@ -87,9 +87,21 @@ const Cart = () => {
                 <div className="item-desc">
                   <div className="flex top">
                     <h5>{item.name}</h5>
+                  </div>
+                  <div className="flex top">
                     <h4>₪ {item.price}</h4>
                   </div>
-                  <div className="flex bottom">
+                  <div className="flex top">
+                    {item.color && (
+                      <p>
+                          {translations[language].selectedColor}
+                          <div
+                            className="color-circle"
+                            style={{ backgroundColor: item.color.name }}
+                            title={item.color.name}
+                          />
+                      </p>
+                    )}
                     <div>
                       <p className="quantity-desc">
                         <span
@@ -125,17 +137,24 @@ const Cart = () => {
               </div>
             ))}
         </div>
+
         {/* Subtotal calculation */}
         {cartItems.length >= 1 && (
           <div className="cart-bottom">
             <div className="total">
-              <h3>Subtotal:</h3>
+              <h3>{translations[language].subtotal}</h3>
               <h3>₪ {totalPrice}</h3>
             </div>
             <div className="btn-container">
-              <button type="button" className="btn" onClick={handleCheckout}>
-                Proceed To Checkout
-              </button>
+              <Link href="/submitOrder">
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setShowCart(false)}
+                >
+                  {translations[language].submitOrder}
+                </button>
+              </Link>
             </div>
           </div>
         )}

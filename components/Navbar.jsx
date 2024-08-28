@@ -3,15 +3,11 @@ import Link from 'next/link';
 import { AiOutlineShopping, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { Cart } from '.';
 import { useStateContext } from '../context/StateContext';
-
-// Import Image from next/image if you want Next.js optimization (Optional)
-import Image from 'next/image';
-
-// If using a direct import, adjust the path accordingly
-// import logo from 'assets/Maisamnakeuplogo.png'; // This would be if the logo is in src/assets
+import translations from '../translations/translations'; // Import translations
 
 const Navbar = () => {
   const { showCart, setShowCart, totalQuantities } = useStateContext();
+  const { language, changeLanguage } = useStateContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -32,11 +28,22 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const toggleLanguage = () => {
+    // Toggle between English ('en'), Arabic ('ar'), and Hebrew ('he')
+    if (language === 'en') {
+      changeLanguage('ar');
+    } else if (language === 'ar') {
+      changeLanguage('he');
+    } else {
+      changeLanguage('en');
+    }
+    // Additional logic to handle language change (e.g., updating content, storing preference)
+  };
+
   return (
     <div className="navbar-container">
-      {/* If the image is in the public folder, use the following */}
+      {/* Logo */}
       <Link href="/" passHref>
-        {/* The img tag should have a cursor style to indicate it is clickable */}
         <img
           src="/maisamnakeuplogo.png"
           className="logo-img"
@@ -44,33 +51,54 @@ const Navbar = () => {
           style={{ cursor: 'pointer' }}
         />
       </Link>
-      {/* If you prefer to use Next.js Image optimization, use the following */}
-      {/* <Image src="/maisamnakeuplogo.png" alt="Logo" width={150} height={50} className="logo-img" /> */}
 
+      {/* Navigation Links */}
       <nav className="navbar">
         <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-          <Link href="/catgeory_products?categoryName=palettes">Palettes</Link>
-          <Link href="/catgeory_products?categoryName=mascara">Mascara</Link>
-          <Link href="/catgeory_products?categoryName=eyeshadow">Eyeshadow</Link>
-          <Link href="/catgeory_products?categoryName=blush">Blush</Link>
-          <Link href="/catgeory_products?categoryName=lipstick">Lipstick</Link>
-          <Link href="/catgeory_products?categoryName=concealer">Concealer</Link>
+          <Link href="/catgeory_products?categoryName=palettes">
+            {translations[language].palettes}
+          </Link>
+          <Link href="/catgeory_products?categoryName=mascara">
+            {translations[language].mascara}
+          </Link>
+          <Link href="/catgeory_products?categoryName=eyeshadow">
+            {translations[language].eyeshadow}
+          </Link>
+          <Link href="/catgeory_products?categoryName=blush">
+            {translations[language].blush}
+          </Link>
+          <Link href="/catgeory_products?categoryName=lipstick">
+            {translations[language].lipstick}
+          </Link>
+          <Link href="/catgeory_products?categoryName=concealer">
+            {translations[language].concealer}
+          </Link>
         </div>
       </nav>
 
+      {/* Cart Icon */}
       <button type="button" className="cart-icon" onClick={() => setShowCart(true)}>
         <AiOutlineShopping />
         <span className="cart-item-qty">{totalQuantities}</span>
       </button>
 
-      {/* Hamburger Menu Icon */}
+      {/* Language Toggle Button */}
+      <button
+        type="button"
+        className="language-toggle-btn"
+        onClick={toggleLanguage}
+      >
+        {translations[language].switchTo}
+      </button>
+
+      {/* Hamburger Menu Icon for Mobile */}
       {isMobile && (
         <button type="button" className="menu-icon" onClick={toggleMenu}>
           {isMenuOpen ? <AiOutlineClose /> : <AiOutlineMenu />}
         </button>
       )}
 
-      {/* Only show the Cart when setShowCart is true */}
+      {/* Cart Component */}
       {showCart && <Cart />}
     </div>
   );
