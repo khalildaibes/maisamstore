@@ -183,6 +183,7 @@ const SubmitOrder = () => {
                 <div className="product" key={item._id}>
                   <img
                     src={urlFor(item?.image[0])}
+                    alt=""
                     className="cart-product-image"
                   />
                   <div className="item-desc">
@@ -230,6 +231,7 @@ const SubmitOrder = () => {
               <div className="product" key={item._id}>
                 <img
                   src={urlFor(item?.image[0])}
+                  alt=""
                   className="cart-product-image"
                 />
                 <div className="item-desc">
@@ -261,7 +263,7 @@ const SubmitOrder = () => {
             <h3>{translations[language].totalItems} {totalQuantities}</h3>
             <h3>{translations[language].subtotal} ₪ {totalPrice}</h3>
           </div>
-          <button className="btn" onClick={() => setOrderSubmitted(false)}>
+          <button className="btn" onClick={() => clearCart()}>
             {translations[language].editOrder}
           </button>
         </div>

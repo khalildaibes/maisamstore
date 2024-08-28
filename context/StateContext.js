@@ -107,6 +107,14 @@ export const StateContext = ({ children }) => {
     });
   };
 
+  // Function to clear the cart
+  const clearCart = () => {
+    setCartItems([]);
+    setTotalPrice(0);
+    setTotalQuantities(0);
+    toast.success('Cart has been cleared.');
+  };
+
   // Function to change language and set text direction
   const changeLanguage = (lang) => {
     setLanguage(lang);
@@ -131,6 +139,7 @@ export const StateContext = ({ children }) => {
         setCartItems,
         setTotalQuantities,
         setTotalPrice,
+        clearCart, // Added clearCart function
         language, // Added language to context
         changeLanguage, // Added function to change language
       }}
