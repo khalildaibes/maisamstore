@@ -4,7 +4,7 @@ import { urlFor } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
 
 const SubmitOrder = () => {
-  const { cartItems, totalPrice, totalQuantities, language } = useStateContext(); // Get language from context
+  const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
   const [orderDetails, setOrderDetails] = useState({
     phoneNumber: "",
     name: "",
@@ -45,7 +45,7 @@ const SubmitOrder = () => {
               },
               {
                 "type": "text",
-                "text": orderDetails.phoneNumber
+                "text": `+972${orderDetails.phoneNumber.substring(1)}`
               },
               {
                 "type": "text",
