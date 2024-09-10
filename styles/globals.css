@@ -1012,6 +1012,32 @@ margin-top: 160px;
   }
 
 
+
+  .category-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .category-button {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .category-button.active {
+    background-color: #0070f3;
+    color: white;
+  }
+  
+  .category-button:hover {
+    background-color: #0070f3;
+    color: white;
+  }
+
 }
 
 @media (min-width: 769px) {
@@ -1505,4 +1531,97 @@ margin-top: 160px;
 
 .language-toggle-btn:hover {
   color: #d81b60; /* Adjust hover color as needed */
+}
+.category-buttons {
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  width: 100%;
+
+  position: relative;
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+ 
+}
+
+.category-button {
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border: none;
+  cursor: pointer;
+  font-size: 0.7rem;
+
+  border-radius: 5px;
+}
+
+.category-button.active {
+  background-color: #d81b60;
+  color: white;
+}
+
+.category-button:hover {
+  background-color: #d81b60;
+  color: white;
+}
+
+.brands-section {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.brands-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.brand-item {
+  width: 150px;
+  text-align: center;
+}
+
+.brand-image-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.brand-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.brand-name {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 0.7rem;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+.category-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between the icon and buttons */
+}
+
+.filter-icon {
+
+  font-size: 24px; /* Adjust the icon size */
+  color: #d81b60; /* Change the icon color */
+  cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+}
+
+.category-buttons {
+  display: flex;
+  gap: 10px; /* Space between buttons */
 }

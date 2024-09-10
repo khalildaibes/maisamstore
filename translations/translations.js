@@ -5,6 +5,7 @@ const translations = {
       palettes: 'Palettes',
       mascara: 'Mascara',
       eyeshadow: 'Eyeshadow',
+      makeup:'makeup',
       blush: 'Blush',
       lipstick: 'Lipstick',
       concealer: 'Concealer',
@@ -61,13 +62,17 @@ const translations = {
       orderConfirmation: 'Order Confirmation',
       thankYouForOrder: 'Thank you, {name}, for your order!',
       orderSummary: 'Order Summary:',
-      itemsOrdered: 'Items Ordered:'
-      
+      itemsOrdered: 'Items Ordered:',
+      brands: 'Brands',
+      brandsDescription: 'Hot Brands',
+      allCategories: 'all products'
+
     
     },
     ar: {
       palettes: 'لوحات',
       mascara: 'ماسكارا',
+      makeup:'ميكب',
       eyeshadow: 'ظل العيون',
       blush: 'أحمر الخدود',
       lipstick: 'أحمر الشفاه',
@@ -125,7 +130,11 @@ const translations = {
       orderConfirmation: 'تأكيد الطلب',
       thankYouForOrder: 'شكرًا لك، {name}، على طلبك!',
       orderSummary: 'ملخص الطلب:',
-      itemsOrdered: 'العناصر المطلوبة:'
+      itemsOrdered: 'العناصر المطلوبة:',
+      brands: 'شركات',
+      brandsDescription: 'الشركات الاكثر روجا',
+
+      allCategories: 'كل المنتجات'
 
       
     },
@@ -135,6 +144,7 @@ const translations = {
       eyeshadow: 'צללית',
       blush: 'סומק',
       lipstick: 'שפתון',
+      makeup:'מייקאפ',
       concealer: 'קונסילר',
       switchTo: 'English',
       addToCart: 'הוסף לעגלה',
@@ -189,7 +199,11 @@ const translations = {
       orderConfirmation: 'אישור הזמנה',
       thankYouForOrder: 'תודה, {name}, על ההזמנה שלך!',
       orderSummary: 'סיכום הזמנה:',
-      itemsOrdered: 'פריטים שהוזמנו:'
+      itemsOrdered: 'פריטים שהוזמנו:',
+      brands: 'מותגים',
+      brandsDescription: 'מותגים לוהטים',
+      allCategories: 'כל המוצרים'
+
     },
   };
   

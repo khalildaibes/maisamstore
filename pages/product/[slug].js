@@ -4,52 +4,44 @@ import {
   AiOutlinePlus,
   AiFillStar,
   AiOutlineStar,
-  AiOutlineCheck,
-  AiOutlineClose, // Import X icon
+  AiOutlineClose,
 } from "react-icons/ai";
-import { client, urlFor } from "../../lib/client";
+import { client, urlFor, getUrlFromId } from "../../lib/client";
 import { Product } from "../../components";
 import { useStateContext } from '../../context/StateContext'; 
-import translations from '../../translations/translations'; // Import translations
-
+import translations from '../../translations/translations';
+function videoAssetFor(source) {
+  return getFileAsset(source, client.config());
+}
 const ProductDetails = ({ product, products }) => {
-  const { image, name, details, price, colors } = product;
-  const { decQty, incQty, qty, onAdd, setShowCart, language } = useStateContext(); // Assuming language is managed in context
+  const { image, name, details, price, colors, video } = product;  // Add videos here
+  const { decQty, incQty, qty, onAdd, setShowCart, language } = useStateContext();
   const [index, setIndex] = useState(0);
+  const [isVideoSelected, setIsVideoSelected] = useState(false);  // State to toggle between video and image
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);  // Index to track the selected video
   const [selectedColor, setSelectedColor] = useState(null);
 
   const handleColorClick = (color) => {
-    if (color.quantity > 0) {  // Only allow selection if the color quantity is greater than 0
+    if (color.quantity > 0) {
       setSelectedColor(color);
     }
   };
 
   const handleAddToCart = () => {
-    if (colors != null) {
-      if (colors.length > 0 && !selectedColor) {
-        alert(translations[language].selectColorAlert);
-        return;
-      } else {
-        onAdd(product, qty, selectedColor);
-      }
-    } else {
-      onAdd(product, qty);
+    if (colors && colors.length > 0 && !selectedColor) {
+      alert(translations[language].selectColorAlert);
+      return;
     }
+    onAdd(product, qty, selectedColor);
   };
 
   const handleBuyNow = () => {
-    if (colors != null) {
-      if (colors.length > 0 && !selectedColor) {
-        alert(translations[language].selectColorAlert);
-        return;
-      } else {
-        onAdd(product, qty, selectedColor);
-        setShowCart(true);
-      }
-    } else {
-      onAdd(product, qty);
-      setShowCart(true);
+    if (colors && colors.length > 0 && !selectedColor) {
+      alert(translations[language].selectColorAlert);
+      return;
     }
+    onAdd(product, qty, selectedColor);
+    setShowCart(true);
   };
 
   return (
@@ -57,19 +49,52 @@ const ProductDetails = ({ product, products }) => {
       <div className="product-detail-container">
         <div>
           <div className="image-container">
-            <img
-              src={urlFor(image && image[index])}
-              className="product-detail-image"
-            />
+            {/* Conditional rendering to either show the image or the video */}
+            {!isVideoSelected ? (
+              <img
+                src={urlFor(image && image[index])}
+                className="product-detail-image"
+                alt={name}
+              />
+            ) : (
+              <video className="product-detail-image" controls>
+                <source src={getUrlFromId(video[selectedVideoIndex].videoFile)} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
           </div>
+
           <div className="small-images-container">
+            {/* Map through the images */}
             {image?.map((item, i) => (
               <img
                 key={i}
                 src={urlFor(item)}
-                className={i === index ? 'small-image selected-image' : 'small-image'}
-                onMouseEnter={() => setIndex(i)}
+                className={i === index && !isVideoSelected ? 'small-image selected-image' : 'small-image'}
+                onClick={() => { setIndex(i); setIsVideoSelected(false); }}
+                alt={`Product image ${i + 1}`}
               />
+            ))}
+
+            {/* Map through the videos */}
+            {video?.map((videoUrl, i) => (
+              <div
+                key={i}
+                className={isVideoSelected && i === selectedVideoIndex ? 'small-image selected-image' : 'small-image'}
+                onClick={(e) => { 
+                  e.preventDefault();  // Prevent default behavior
+                  setIsVideoSelected(true); 
+                  setSelectedVideoIndex(i); 
+                }}
+              >
+
+                <img
+                                className={i === index && !isVideoSelected ? 'small-image selected-image' : 'small-image'}
+
+                src={urlFor(video[selectedVideoIndex].thumbnail)}
+                alt={name}
+              />
+              </div>
             ))}
           </div>
         </div>
@@ -84,7 +109,6 @@ const ProductDetails = ({ product, products }) => {
               <AiFillStar />
               <AiOutlineStar />
             </div>
-            {/* TODO: Make reviews dynamic */}
             <p>{translations[language].reviews}</p>
           </div>
           <h4>{translations[language].details}</h4>
@@ -103,12 +127,12 @@ const ProductDetails = ({ product, products }) => {
                 {item.quantity === 0 && (
                   <AiOutlineClose
                     style={{
-                      color: 'red', // 'X' sign for out of stock
+                      color: 'red',
                       position: 'absolute',
                       top: '50%',
                       left: '50%',
                       transform: 'translate(-50%, -50%)',
-                      fontSize: '1.5rem', // Adjust the size as needed
+                      fontSize: '1.5rem',
                     }}
                   />
                 )}
@@ -159,8 +183,6 @@ const ProductDetails = ({ product, products }) => {
     </div>
   );
 };
-
-// Static path and prop fetching functions remain unchanged
 
 export const getStaticPaths = async () => {
   const query = `*[_type == "product"] {
