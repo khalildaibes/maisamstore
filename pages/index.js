@@ -19,7 +19,7 @@ const Home = ({ products, bannerData, brands }) => {
   // Step 2: Filter products based on the selected category
   const filteredProducts = selectedCategory === 'all' 
     ? products 
-    : products.filter((product) => product.categories.includes(selectedCategory));
+    : products.filter((product) => product.categories.trim().includes(selectedCategory.trim()));
     const displayedProducts = new Set();
 
 
@@ -85,7 +85,7 @@ const Home = ({ products, bannerData, brands }) => {
         </button>
 
         {allCategories.map((category) => (
-          category!=" " && category!=""&& !brands.some((brand)=>brand.name === category) ?<button 
+          category!=" " && category!=""&& !brands.some((brand)=>brand.name.trim() === category.trim()) ?<button 
             key={category}
             className={`category-button ${selectedCategory === category ? 'active' : ''}`}
             onClick={() => setSelectedCategory(category)}
