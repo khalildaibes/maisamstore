@@ -46,7 +46,6 @@ const SubmitOrder = () => {
       return;
     }
     handleSubmitWhatsapp(event);
-    clearCart();
   };
 
   const handleSubmitWhatsapp = async (event) => {
