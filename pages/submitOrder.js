@@ -71,10 +71,10 @@ const SubmitOrder = () => {
     emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
-        alert('Email sent successfully!');
+        alert('Thank you for buying!');
       }, (error) => {
         console.error('FAILED...', error);
-        alert('Failed to send the email.');
+        alert('opps we didnt complete the purchase.');
       });
 
     // Clear the form after sending
