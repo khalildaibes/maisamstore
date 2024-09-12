@@ -82,7 +82,7 @@ const SubmitOrder = () => {
               },
               {
                 "type": "text",
-                "text": orderDetails.notes
+                "text": orderDetails.notes == "" ? " no nnotes": orderDetails.notes
               },
               {
                 "type": "text",
@@ -117,9 +117,12 @@ const SubmitOrder = () => {
         setOrderSubmitted(true);
       } else {
         alert('Failed to send WhatsApp message. Please try again.');
+        console.log(response)
+
       }
     } catch (error) {
       alert('An error occurred while sending the order. Please try again.');
+      conso0le.log(error)
     }
   };
 
