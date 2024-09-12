@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+
 import { AiOutlineShopping, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { Cart } from '.';
 import { useStateContext } from '../context/StateContext';
@@ -55,24 +56,22 @@ const Navbar = () => {
       {/* Navigation Links */}
       <nav className="navbar">
         <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-          <Link href="/catgeory_products?categoryName=palettes">
-            {translations[language].palettes}
+          <Link href="/brands">
+            {translations[language].brands}
           </Link>
-          <Link href="/catgeory_products?categoryName=mascara">
-            {translations[language].mascara}
+          <Link href="/catgeory_products?categoryName=Face">
+            {translations[language].face}
           </Link>
-          <Link href="/catgeory_products?categoryName=eyeshadow">
-            {translations[language].eyeshadow}
+          <Link href="/catgeory_products?categoryName=Cheeks">
+            {translations[language].cheeks}
           </Link>
-          <Link href="/catgeory_products?categoryName=blush">
-            {translations[language].blush}
+          <Link href="/catgeory_products?categoryName=Eyes">
+            {translations[language].eyes}
           </Link>
-          <Link href="/catgeory_products?categoryName=lipstick">
-            {translations[language].lipstick}
+          <Link href="/catgeory_products?categoryName=Lips">
+            {translations[language].lips}
           </Link>
-          <Link href="/catgeory_products?categoryName=concealer">
-            {translations[language].concealer}
-          </Link>
+
         </div>
       </nav>
 

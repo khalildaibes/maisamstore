@@ -141,7 +141,8 @@ background-color: #ffffff; /* Example background color */
 }
 .product-card{
   text-align: center;
-
+  word-wrap: break-word;
+  width: 30%;
  cursor: pointer;
   transform: scale(1, 1);
   transition: transform 0.5s ease;
@@ -421,12 +422,11 @@ text-align: end;
 
   overflow: auto;
 max-height: 70vh;
-padding: 20px 10px;
+padding: 20px 20px;
 }
 .product{
   display: flex;
  gap: 30px;
-  padding: 20px;
 }
 .product .cart-product-image{
   width:180px ;
@@ -467,10 +467,13 @@ padding: 20px 10px;
 .total{
   display: flex;
   justify-content: space-between;
+  word-wrap: break-word; /* Allow long words to break */
+  white-space: normal; /* Make sure the text can wrap onto the next line */
 }
 .total h3{
   font-size: 22px;
   color: white;
+  width: 30%;
 
 
 }
@@ -865,6 +868,7 @@ margin-top: 160px;
   }
   .product-card{
     width: 40%;
+    word-wrap: break-word;
 
     text-align: center;
   
@@ -893,6 +897,10 @@ margin-top: 160px;
     text-align: center;
     font-weight: bold; /* Makes the text bold */
     /* font-weight: 500; */
+    word-wrap: break-word;
+    word-wrap: break-word; /* Allow long words to break */
+    white-space: normal; /* Make sure the text can wrap onto the next line */
+
   }
   .product-price{
     font-weight: 800;
@@ -1434,7 +1442,7 @@ margin-top: 160px;
 
 .submit-order-page {
   padding: 20px;
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
 }
 
@@ -1624,4 +1632,32 @@ margin-top: 160px;
 .category-buttons {
   display: flex;
   gap: 10px; /* Space between buttons */
+}
+.category-buttons {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.category-button {
+  margin: 0.5rem;
+}
+
+.filter-icon {
+  margin-right: 1rem;
+}
+
+.expanded-categories {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  margin-left: 1rem;
+  font-size: 0.9rem;
+  text-decoration: underline;
 }

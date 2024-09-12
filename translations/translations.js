@@ -9,11 +9,21 @@ const translations = {
       blush: 'Blush',
       lipstick: 'Lipstick',
       concealer: 'Concealer',
+      brands:"Brands",
+      face:"Face",
+      cheeks:"Cheeks",
+      eyes:"Eyes",
+      lips:"Lips",
       switchTo: 'العربية', // This means "Arabic" in Arabic
       addToCart: 'Add to Cart',
       buyNow: 'Buy Now',
       quantity: 'Quantity:',
       details: 'Details:',
+      addressType:"Location",
+      addressType_48:"Inside Israel",
+      addressType_westBank:"West Bank",
+      city:"City",
+      street:"Street",
       youMayAlsoLike: 'You may also like',
       selectColorAlert: 'Please select a color before adding to the cart.',
       reviews: '(20)', // This can be dynamic if you fetch the actual number of reviews
@@ -53,6 +63,7 @@ const translations = {
       orderSummary: 'Order Summary:',
       itemsOrdered: 'Items Ordered:',
       editOrder: 'Edit Order',
+      finishOrder: 'Finish',
       submitOrder: 'Submit Order',
       yourCart: 'Your Cart',
       selectedColor: 'Selected Color:',
@@ -65,6 +76,7 @@ const translations = {
       itemsOrdered: 'Items Ordered:',
       brands: 'Brands',
       brandsDescription: 'Hot Brands',
+      deliveryFee:"Delivery fee",
       allCategories: 'all products'
 
     
@@ -73,6 +85,11 @@ const translations = {
       palettes: 'لوحات',
       mascara: 'ماسكارا',
       makeup:'ميكب',
+      brands:"شركات",
+      face:"وجه",
+      cheeks:"خدود",
+      eyes:"عيون",
+      lips:"شفاه",
       eyeshadow: 'ظل العيون',
       blush: 'أحمر الخدود',
       lipstick: 'أحمر الشفاه',
@@ -82,6 +99,11 @@ const translations = {
       buyNow: 'اشتري الآن',
       quantity: 'الكمية:',
       details: 'التفاصيل:',
+      addressType:"منطقة السكن",
+      addressType_48:"الداخل",
+      addressType_westBank:"القدس والضفه",
+      city:"بلد",
+      street:"شارع",
       youMayAlsoLike: 'قد يعجبك أيضًا',
       selectColorAlert: 'يرجى اختيار اللون قبل الإضافة إلى السلة.',
       reviews: '(20)', // This can be dynamic if you fetch the actual number of reviews
@@ -133,7 +155,7 @@ const translations = {
       itemsOrdered: 'العناصر المطلوبة:',
       brands: 'شركات',
       brandsDescription: 'الشركات الاكثر روجا',
-
+      finishOrder: 'انهاء',
       allCategories: 'كل المنتجات'
 
       
@@ -143,6 +165,11 @@ const translations = {
       mascara: 'מסקרה',
       eyeshadow: 'צללית',
       blush: 'סומק',
+      brands:"מותגים",
+      face:"פנים",
+      cheeks:"לחיים",
+      eyes:"עיניים",
+      lips:"שפתיים",
       lipstick: 'שפתון',
       makeup:'מייקאפ',
       concealer: 'קונסילר',
@@ -150,6 +177,11 @@ const translations = {
       addToCart: 'הוסף לעגלה',
       buyNow: 'קנה עכשיו',
       quantity: 'כמות:',
+      addressType:"מרחב מיגורים",
+      addressType_48:"ישראל",
+      addressType_westBank:"ירושלים וגדה מערבית",
+      city:"עיר",
+      street:"רחוב",
       details: 'פרטים:',
       youMayAlsoLike: 'אולי גם יעניין אותך',
       selectColorAlert: 'נא לבחור צבע לפני הוספה לעגלה.',
@@ -202,7 +234,8 @@ const translations = {
       itemsOrdered: 'פריטים שהוזמנו:',
       brands: 'מותגים',
       brandsDescription: 'מותגים לוהטים',
-      allCategories: 'כל המוצרים'
+      allCategories: 'כל המוצרים',
+      finishOrder: 'סיים',
 
     },
   };

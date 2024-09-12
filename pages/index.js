@@ -32,7 +32,7 @@ const Home = ({ products, bannerData, brands }) => {
       {/* Brands Section */}
       <div className="brands-section">
         <div className="brands-container">
-          {brands.map((brand) => (
+          {brands.slice(0,5).map((brand) => (
             <Link  key={`Link_${brand._id}}`} href={`/catgeory_products?categoryName=${brand.name}`}>
             
             <div key={brand._id} className="brand-item">
@@ -61,14 +61,14 @@ const Home = ({ products, bannerData, brands }) => {
         >
           {translations[language].allCategories}
         </button>
-        {allCategories.map((category) => (
-          <button 
+        {allCategories.slice(0,6).map((category) => (
+          category!=" " && category!=""  ?<button 
             key={category}
             className={`category-button ${selectedCategory === category ? 'active' : ''}`}
             onClick={() => setSelectedCategory(category)}
           >
             {category}
-          </button>
+          </button>:<div></div>
         ))}
       </div>
 
@@ -112,7 +112,9 @@ const Home = ({ products, bannerData, brands }) => {
     
       {/* Render products grouped by their categories, excluding duplicates and those with same name as brand */}
       <div className='categories-container'>
-        {allCategories.map((category) => {
+        {allCategories
+          .filter((category) => !brands.some((brand) => brand.name === category)) // Exclude categories that match brand names
+          .map((category) => {
           const categoryProducts = products
             .filter((product) => product.categories.includes(category))
             .filter((product) => !displayedProducts.has(product._id)); // Exclude already displayed products
@@ -147,7 +149,6 @@ const Home = ({ products, bannerData, brands }) => {
         </ul>
       </div>
 
-      <FooterBanner footerBanner={bannerData && bannerData[0]} />
     </>
   );
 };

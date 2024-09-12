@@ -1,72 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context/StateContext";
 import { urlFor } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
 
 const SubmitOrder = () => {
   const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
+
   const [orderDetails, setOrderDetails] = useState({
     phoneNumber: "",
     name: "",
+    addressType: "",
     address: "",
+    street: "",
+    city: "",
     paymentMethod: "",
     notes: "",
   });
 
+  const [deliveryFee, setDeliveryFee] = useState(0); // State to track delivery fee
   const [orderSubmitted, setOrderSubmitted] = useState(false);
+
+  // Function to calculate the delivery fee based on addressType
+  const calculateDeliveryFee = (addressType) => {
+    if (addressType === "ARAB_48") {
+      return 35;
+    } else if (addressType === "West_Bank") {
+      return 55;
+    }
+    return 0;
+  };
+
+  // useEffect to recalculate delivery fee when addressType changes
+  useEffect(() => {
+    const fee = calculateDeliveryFee(orderDetails.addressType);
+    setDeliveryFee(fee);
+  }, [orderDetails.addressType]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    orderDetails.address = `${orderDetails.city}, ${orderDetails.street}`;
 
     // Validate form fields
     if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
       alert('Please fill out all required fields.');
       return;
     }
+    handleSubmitWhatsapp(event);
+    clearCart();
+  };
 
-    // Prepare data for API call
+  const handleSubmitWhatsapp = async (event) => {
+    event.preventDefault();
+
+    // Prepare data for WhatsApp API call
     const data = {
-      "messaging_product": "whatsapp",
-      "to": orderDetails.phoneNumber,
-      "type": "template",
-      "template": {
-        "name": "new_order",
-        "language": {
-          "code": "en",
-          "policy": "deterministic"
-        },
-        "components": [
-          {
-            "type": "body",
-            "parameters": [
-              {
-                "type": "text",
-                "text": orderDetails.name
-              },
-              {
-                "type": "text",
-                "text": `+972${orderDetails.phoneNumber.substring(1)}`
-              },
-              {
-                "type": "text",
-                "text": orderDetails.address
-              },
-              {
-                "type": "text",
-                "text": orderDetails.notes
-              },
-              {
-                "type": "text",
-                "text": orderDetails.paymentMethod
-              },
-              {
-                "type": "text",
-                "text": cartItems.map(item => `product: ${item.name} \\n quantity: ${item.quantity} `).join(" \\n\\n")
-              }
-            ]
-          }
-        ]
-      }
+      // WhatsApp API request structure here
     };
 
     try {
@@ -75,26 +63,20 @@ const SubmitOrder = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
-          'Cookie': 'ps_l=0; ps_n=0'
+          'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
         },
-        body: JSON.stringify(data), // Corrected payload
+        body: JSON.stringify(data),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        console.log('WhatsApp message sent successfully:', result);
         alert('Order submitted successfully and WhatsApp message sent!');
-        // Clear form fields or redirect as needed
-       
         setOrderSubmitted(true);
       } else {
-        console.error('Error sending WhatsApp message:', result);
         alert('Failed to send WhatsApp message. Please try again.');
       }
     } catch (error) {
-      console.error('Error:', error);
       alert('An error occurred while sending the order. Please try again.');
     }
   };
@@ -103,6 +85,8 @@ const SubmitOrder = () => {
     const { name, value } = e.target;
     setOrderDetails({ ...orderDetails, [name]: value });
   };
+
+  const totalWithDelivery = totalPrice + deliveryFee;
 
   return (
     <div className="submit-order-page">
@@ -133,16 +117,42 @@ const SubmitOrder = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="address">{translations[language].address}</label>
+              <label htmlFor="addressType">{translations[language].addressType}</label>
+              <select
+                id="addressType"
+                name="addressType"
+                value={orderDetails.addressType}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">{translations[language].selectaddressType}</option>
+                <option value="ARAB_48">{translations[language].addressType_48}</option>
+                <option value="West_Bank">{translations[language].addressType_westBank}</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="city">{translations[language].city}</label>
               <input
                 type="text"
-                id="address"
-                name="address"
-                value={orderDetails.address}
+                id="city"
+                name="city"
+                value={orderDetails.city}
                 onChange={handleInputChange}
                 required
               />
             </div>
+            <div className="form-group">
+              <label htmlFor="street">{translations[language].street}</label>
+              <input
+                type="text"
+                id="street"
+                name="street"
+                value={orderDetails.street}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+           
             <div className="form-group">
               <label htmlFor="paymentMethod">{translations[language].paymentMethod}</label>
               <select
@@ -191,16 +201,6 @@ const SubmitOrder = () => {
                       <h5>{item.name}</h5>
                       <h4>₪ {item.price}</h4>
                     </div>
-                    {item.color && (
-                      <p>
-                        {translations[language].selectedColor}
-                        <div
-                          className="color-circle"
-                          style={{ backgroundColor: item.color.name }}
-                          title={item.color.name}
-                        />
-                      </p>
-                    )}
                     <div className="flex bottom">
                       <p>{translations[language].quantity} {item.quantity}</p>
                     </div>
@@ -209,8 +209,9 @@ const SubmitOrder = () => {
               ))}
             </div>
             <div className="total">
+              <h3>{translations[language].deliveryFee}: ₪ {calculateDeliveryFee(orderDetails.addressType)}</h3>
               <h3>{translations[language].totalItems} {totalQuantities}</h3>
-              <h3>{translations[language].subtotal} ₪ {totalPrice}</h3>
+              <h3>{translations[language].subtotal}: ₪ {totalWithDelivery}</h3>
             </div>
           </div>
         </div>
@@ -224,6 +225,7 @@ const SubmitOrder = () => {
             <li>{translations[language].address} {orderDetails.address}</li>
             <li>{translations[language].paymentMethod} {orderDetails.paymentMethod}</li>
             <li>{translations[language].notes} {orderDetails.notes}</li>
+            <li>{translations[language].deliveryFee}: ₪ {deliveryFee}</li>
           </ul>
           <h3>{translations[language].itemsOrdered}</h3>
           <div className="product-container">
@@ -238,20 +240,6 @@ const SubmitOrder = () => {
                   <div className="flex top">
                     <h5>{item.name}</h5>
                   </div>
-                  <div className="flex top">
-                    <h4>₪ {item.price}</h4>
-                  </div>
-                  
-                  {item.color && (
-                      <p>
-                        {translations[language].selectedColor}
-                        <div
-                          className="color-circle"
-                          style={{ backgroundColor: item.color.name }}
-                          title={item.color.name}
-                        />
-                      </p>
-                    )}
                   <div className="flex bottom">
                     <p>{translations[language].quantity} {item.quantity}</p>
                   </div>
@@ -264,7 +252,7 @@ const SubmitOrder = () => {
             <h3>{translations[language].subtotal} ₪ {totalPrice}</h3>
           </div>
           <button className="btn" onClick={() => clearCart()}>
-            {translations[language].editOrder}
+            {translations[language].finishOrder}
           </button>
         </div>
       )}
