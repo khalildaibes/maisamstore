@@ -4,7 +4,7 @@ import { urlFor, client } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
 import emailjs from 'emailjs-com';
 
-const SubmitOrder = () => {
+const SubmitOrder = (products, bannerData, brands) => {
   const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
 
   const [orderDetails, setOrderDetails] = useState({
@@ -69,13 +69,24 @@ const SubmitOrder = () => {
         `).join("                         ") + "   "  + JSON.stringify(orderDetails, null, 2) )
     }
 
-
+    cartItems.map(item => {
+      client
+      .patch(item._id) // Document ID to patch
+      .set({"quantity": products.products.find((product)=> product._id === item._id)?.quantity - item.quantity }) // Shallow merge
+      .commit() // Perform the patch and return a promise
+      .then((item) => {
+        console.log('document updated! New orer:')
+        console.log(item)
+      })
+      .catch((err) => {
+        console.error('Oh no, the update failed: ', err.message)
+      })});
 
 
     emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
-        alert('Thank you for buying!');
+        alert('תודה רבה לכם על הקנייה!');
       }, (error) => {
         console.error('FAILED...', error);
         alert('opps we didnt complete the purchase.');
@@ -437,6 +448,21 @@ const SubmitOrder = () => {
       )}
     </div>
   );
+};
+
+// Fetch data from Sanity
+export const getServerSideProps = async () => {
+  const query = '*[_type == "product"]';
+  const products = await client.fetch(query);
+
+  const bannerQuery = '*[_type == "banner"]';
+  const bannerData = await client.fetch(bannerQuery);
+  const brandsQuery = '*[_type == "brand"]'; // Fetch brands from "brand" schema
+  const brands = await client.fetch(brandsQuery);
+
+  return {
+    props: { products, bannerData, brands }
+  };
 };
 
 export default SubmitOrder;
