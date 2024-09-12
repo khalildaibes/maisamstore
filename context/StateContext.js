@@ -22,10 +22,27 @@ export const StateContext = ({ children }) => {
 
   // Function to AddToCart
   const onAdd = (product, quantity, selectedColor = null) => {
+   
     const checkProductInCart = cartItems.find(
       (item) => item._id === product._id
     );
-  
+    if (checkProductInCart) {
+      var enough = true;
+      cartItems.map((cartProduct) => {
+        if (cartProduct._id === product._id){
+          if (cartProduct.old_quantity < cartProduct.quantity + quantity){
+            enough = false;
+            }
+        }
+    }
+
+      );
+
+      if (!enough){
+        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+        return ;
+      }
+    }
     setTotalPrice(
       (prevTotalPrice) => prevTotalPrice + product.price * quantity
     );
@@ -46,6 +63,7 @@ export const StateContext = ({ children }) => {
       setCartItems(updatedCartItems);
     } else {
       // Add new product to cart
+      product.old_quantity = product.quantity;
       product.quantity = quantity;
       product.color = selectedColor; // Store the selected color
       setCartItems([...cartItems, { ...product }]);
@@ -76,6 +94,15 @@ export const StateContext = ({ children }) => {
     const newCartItems = cartItems.filter((item) => item._id !== id);
 
     if (value === 'inc') {
+      var enough = true;
+
+        if (foundProduct.old_quantity < foundProduct.quantity + 1){
+          enough = false;
+          }
+      if (!enough){
+        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+        return ;
+      }
       setCartItems([
         ...newCartItems,
         { ...foundProduct, quantity: foundProduct.quantity + 1 },
