@@ -56,7 +56,7 @@ const SubmitOrder = () => {
     const data = {
       "messaging_product": "whatsapp",
       // WhatsApp API request structure here
-      "to": "0505831183",
+      "to": "+972505831183",
       "type": "template",
       "template": {
         "name": "new_order",
