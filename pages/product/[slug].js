@@ -29,7 +29,7 @@ const ProductDetails = ({ product, products }) => {
 
   const handleAddToCart = () => {
     if (product.quantity  > 0 ){
-      if (product.quantity  < qty ){
+    if (product.quantity  < qty ){
         alert("NO ENOUGH OF THIS PRODUCT IN STORE");
         return;
       }
