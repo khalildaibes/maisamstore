@@ -46,15 +46,22 @@ const SubmitOrder = () => {
       return;
     }
     handleSubmitWhatsapp(event);
+    handleSubmitWhatsapp_khalil(event);
+    clearCart();
   };
 
   const handleSubmitWhatsapp = async (event) => {
     event.preventDefault();
 
-    // Prepare data for WhatsApp API call
+    // Validate form fields
+    if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    // Prepare data for API call
     const data = {
       "messaging_product": "whatsapp",
-      // WhatsApp API request structure here
       "to": "+972505831183",
       "type": "template",
       "template": {
@@ -81,7 +88,7 @@ const SubmitOrder = () => {
               },
               {
                 "type": "text",
-                "text": orderDetails.notes == "" ? " no nnotes": orderDetails.notes
+                "text": orderDetails.notes
               },
               {
                 "type": "text",
@@ -103,27 +110,114 @@ const SubmitOrder = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-         'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
+          'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
           'Cookie': 'ps_l=0; ps_n=0'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data), // Corrected payload
       });
 
       const result = await response.json();
 
       if (response.ok) {
+        console.log('WhatsApp message sent successfully:', result);
         alert('Order submitted successfully and WhatsApp message sent!');
+        // Clear form fields or redirect as needed
+       
         setOrderSubmitted(true);
       } else {
+        console.error('Error sending WhatsApp message:', result);
         alert('Failed to send WhatsApp message. Please try again.');
-        console.log(response)
-
       }
     } catch (error) {
+      console.error('Error:', error);
       alert('An error occurred while sending the order. Please try again.');
-      conso0le.log(error)
     }
   };
+
+  const handleSubmitWhatsapp_khalil = async (event) => {
+    event.preventDefault();
+
+    // Validate form fields
+    if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    // Prepare data for API call
+    const data = {
+      "messaging_product": "whatsapp",
+      "to": "+972509977084",
+      "type": "template",
+      "template": {
+        "name": "new_order",
+        "language": {
+          "code": "en",
+          "policy": "deterministic"
+        },
+        "components": [
+          {
+            "type": "body",
+            "parameters": [
+              {
+                "type": "text",
+                "text": orderDetails.name
+              },
+              {
+                "type": "text",
+                "text": `+972${orderDetails.phoneNumber.substring(1)}`
+              },
+              {
+                "type": "text",
+                "text": orderDetails.address
+              },
+              {
+                "type": "text",
+                "text": orderDetails.notes
+              },
+              {
+                "type": "text",
+                "text": orderDetails.paymentMethod
+              },
+              {
+                "type": "text",
+                "text": cartItems.map(item => `product: ${item.name} \\n quantity: ${item.quantity} `).join(" \\n\\n")
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    try {
+      // Call the API route to send WhatsApp message
+      const response = await fetch('https://graph.facebook.com/v18.0/209317558942807/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
+          'Cookie': 'ps_l=0; ps_n=0'
+        },
+        body: JSON.stringify(data), // Corrected payload
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log('WhatsApp message sent successfully:', result);
+        alert('Order submitted successfully and WhatsApp message sent!');
+        // Clear form fields or redirect as needed
+       
+        setOrderSubmitted(true);
+      } else {
+        console.error('Error sending WhatsApp message:', result);
+        alert('Failed to send WhatsApp message. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while sending the order. Please try again.');
+    }
+  };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
