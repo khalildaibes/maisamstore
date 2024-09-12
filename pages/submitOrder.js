@@ -45,20 +45,18 @@ const SubmitOrder = () => {
       alert('Please fill out all required fields.');
       return;
     }
-    handleSubmitWhatsapp(event,orderDetails.phoneNumber);
-    handleSubmitWhatsapp(event,"0505831183");
-    handleSubmitWhatsapp(event,"0509977084");
+    handleSubmitWhatsapp(event);
     clearCart();
   };
 
-  const handleSubmitWhatsapp = async (event, phoneNumber) => {
+  const handleSubmitWhatsapp = async (event) => {
     event.preventDefault();
 
     // Prepare data for WhatsApp API call
     const data = {
       "messaging_product": "whatsapp",
       // WhatsApp API request structure here
-      "to": phoneNumber,
+      "to": "0505831183",
       "type": "template",
       "template": {
         "name": "new_order",
