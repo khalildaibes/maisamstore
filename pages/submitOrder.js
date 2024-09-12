@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context/StateContext";
-import { urlFor } from "../lib/client";
+import { urlFor, client } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
 import emailjs from 'emailjs-com';
 
@@ -69,17 +69,9 @@ const SubmitOrder = () => {
         `).join("                         ") + "   "  + JSON.stringify(orderDetails, null, 2) )
     }
 
-    cartItems.map(item => {client
-      .patch(item._id) // Document ID to patch
-      .set({quantity: quantity-item.quantity}) // Shallow merge
-      .commit() // Perform the patch and return a promise
-      .then((updatedBike) => {
-        console.log('Hurray, the bike is updated! New document:')
-        console.log(updatedBike)
-      })
-      .catch((err) => {
-        console.error('Oh no, the update failed: ', err.message)
-      })});
+
+
+
     emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
