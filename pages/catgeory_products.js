@@ -16,7 +16,8 @@ const CategoryPage = ({ products, category }) => {
 
       <div className='products-container'>
         {products?.map((product) => (
-          <Product key={product._id} product={product} />
+          product.quantity  > 0? 
+            <Product key={product._id} product={product} />: null
         ))}
       </div>
     </div>
