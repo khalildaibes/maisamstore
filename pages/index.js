@@ -101,7 +101,8 @@ const Home = ({ products, bannerData, brands }) => {
         <h3 className='category-title'>{translations[language].exploreProducts}</h3>
         <div className='products-container'>
           {filteredProducts.map((product) => (
-            <Product key={product._id} product={product} />
+            product.quantity > 0? 
+            <Product key={product._id} product={product} />: null
           ))}
         </div>
       </div>
