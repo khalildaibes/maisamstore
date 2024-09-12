@@ -45,16 +45,59 @@ const SubmitOrder = () => {
       alert('Please fill out all required fields.');
       return;
     }
-    handleSubmitWhatsapp(event);
+    handleSubmitWhatsapp(event,orderDetails.phoneNumber);
+    handleSubmitWhatsapp(event,"0505831183");
+    handleSubmitWhatsapp(event,"0509977084");
     clearCart();
   };
 
-  const handleSubmitWhatsapp = async (event) => {
+  const handleSubmitWhatsapp = async (event, phoneNumber) => {
     event.preventDefault();
 
     // Prepare data for WhatsApp API call
     const data = {
+      "messaging_product": "whatsapp",
       // WhatsApp API request structure here
+      "to": phoneNumber,
+      "type": "template",
+      "template": {
+        "name": "new_order",
+        "language": {
+          "code": "en",
+          "policy": "deterministic"
+        },
+        "components": [
+          {
+            "type": "body",
+            "parameters": [
+              {
+                "type": "text",
+                "text": orderDetails.name
+              },
+              {
+                "type": "text",
+                "text": `+972${orderDetails.phoneNumber.substring(1)}`
+              },
+              {
+                "type": "text",
+                "text": orderDetails.address
+              },
+              {
+                "type": "text",
+                "text": orderDetails.notes
+              },
+              {
+                "type": "text",
+                "text": orderDetails.paymentMethod
+              },
+              {
+                "type": "text",
+                "text": cartItems.map(item => `product: ${item.name} \\n quantity: ${item.quantity} `).join(" \\n\\n")
+              }
+            ]
+          }
+        ]
+      }
     };
 
     try {
@@ -63,7 +106,8 @@ const SubmitOrder = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
+         'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
+          'Cookie': 'ps_l=0; ps_n=0'
         },
         body: JSON.stringify(data),
       });
