@@ -24,6 +24,8 @@ const BrandPage = ({ brands }) => {
   const router = useRouter();
   const { brandName } = router.query; // Get brand name from query parameter
 
+  const maisamMakeupBrand = brands.find((brand) => brand.name === "Maisam Makeup");
+  const sephora = brands.find((brand) => brand.name === "SEPHORA");
   return (
     <div className='brand-page-container'>
       <div className='products-heading'>
@@ -34,7 +36,25 @@ const BrandPage = ({ brands }) => {
       {/* Brands Section */}
       <div className="brands-section">
         <div className="brands-container">
-          {brands.map((brand) => (
+        <Link  key={`Link_${maisamMakeupBrand._id}}`} href={`/catgeory_products?categoryName=${maisamMakeupBrand.name}`}>
+            
+            <div key={maisamMakeupBrand._id} className="brand-item">
+              <div className="brand-image-container">
+                <img src={urlFor(maisamMakeupBrand.image[0])} alt={maisamMakeupBrand.name} className="brand-image" />
+                <div className="brand-name">{maisamMakeupBrand.name}</div>
+              </div>
+            </div>
+            </Link>
+               <Link  key={`Link_${sephora._id}}`} href={`/catgeory_products?categoryName=${sephora.name}`}>
+            
+            <div key={sephora._id} className="brand-item">
+              <div className="brand-image-container">
+                <img src={urlFor(sephora.image[0])} alt={sephora.name} className="brand-image" />
+                <div className="brand-name">{sephora.name}</div>
+              </div>
+            </div>
+            </Link>
+          {brands.filter((brand)=> brand.name!="Maisam Makeup" && brand.name!="SEPHORA" ).map((brand) => (
             <Link  key={`Link_${brand._id}}`} href={`/catgeory_products?categoryName=${brand.name}`}>
             
             <div key={brand._id} className="brand-item">

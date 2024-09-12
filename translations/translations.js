@@ -14,6 +14,7 @@ const translations = {
       cheeks:"Cheeks",
       eyes:"Eyes",
       lips:"Lips",
+      hair:"Hair",
       switchTo: 'العربية', // This means "Arabic" in Arabic
       addToCart: 'Add to Cart',
       buyNow: 'Buy Now',
@@ -103,6 +104,8 @@ const translations = {
       addressType_48:"الداخل",
       addressType_westBank:"القدس والضفه",
       city:"بلد",
+      hair:"شعر",
+
       street:"شارع",
       youMayAlsoLike: 'قد يعجبك أيضًا',
       selectColorAlert: 'يرجى اختيار اللون قبل الإضافة إلى السلة.',
@@ -170,6 +173,7 @@ const translations = {
       cheeks:"לחיים",
       eyes:"עיניים",
       lips:"שפתיים",
+      hair:"שיער",
       lipstick: 'שפתון',
       makeup:'מייקאפ',
       concealer: 'קונסילר',

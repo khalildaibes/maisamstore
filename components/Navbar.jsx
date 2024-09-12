@@ -71,6 +71,9 @@ const Navbar = () => {
           <Link href="/catgeory_products?categoryName=Lips">
             {translations[language].lips}
           </Link>
+          <Link href="/catgeory_products?categoryName=Hair">
+            {translations[language].hair}
+          </Link>
 
         </div>
       </nav>
