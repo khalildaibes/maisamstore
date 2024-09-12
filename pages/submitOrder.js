@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context/StateContext";
 import { urlFor } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
+import emailjs from 'emailjs-com';
 
 const SubmitOrder = () => {
   const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
@@ -15,6 +16,8 @@ const SubmitOrder = () => {
     city: "",
     paymentMethod: "",
     notes: "",
+    subtoital :"",
+    cart:"",
   });
 
   const [deliveryFee, setDeliveryFee] = useState(0); // State to track delivery fee
@@ -45,10 +48,42 @@ const SubmitOrder = () => {
       alert('Please fill out all required fields.');
       return;
     }
-    handleSubmitWhatsapp(event);
-    handleSubmitWhatsapp_khalil(event);
-    clearCart();
+    sendEmail(event)
+
+
+    setOrderSubmitted(true);
+
   };
+
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    var  message= {
+      "to_name":"khalilok",
+      "from_name":"new order",
+      "totalWithDelivery":totalWithDelivery,
+      "buyername":orderDetails.name,
+      "message" :(cartItems.map(item => `
+        product: ${item.name} 
+        quantity: ${item.quantity}
+        `).join("                         ") + "   "  + JSON.stringify(orderDetails, null, 2) )
+    }
+    emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        alert('Email sent successfully!');
+      }, (error) => {
+        console.error('FAILED...', error);
+        alert('Failed to send the email.');
+      });
+
+    // Clear the form after sending
+
+  };
+
+
+
+
 
   const handleSubmitWhatsapp = async (event) => {
     event.preventDefault();
@@ -88,7 +123,7 @@ const SubmitOrder = () => {
               },
               {
                 "type": "text",
-                "text": orderDetails.notes
+                "text": orderDetails.notes == "" ? "no notes" : orderDetails.notes
               },
               {
                 "type": "text",
@@ -123,7 +158,6 @@ const SubmitOrder = () => {
         alert('Order submitted successfully and WhatsApp message sent!');
         // Clear form fields or redirect as needed
        
-        setOrderSubmitted(true);
       } else {
         console.error('Error sending WhatsApp message:', result);
         alert('Failed to send WhatsApp message. Please try again.');
@@ -133,6 +167,11 @@ const SubmitOrder = () => {
       alert('An error occurred while sending the order. Please try again.');
     }
   };
+
+
+
+
+
 
   const handleSubmitWhatsapp_khalil = async (event) => {
     event.preventDefault();
@@ -146,7 +185,7 @@ const SubmitOrder = () => {
     // Prepare data for API call
     const data = {
       "messaging_product": "whatsapp",
-      "to": "+972509977084",
+      "to": "972509977084",
       "type": "template",
       "template": {
         "name": "new_order",
@@ -172,7 +211,7 @@ const SubmitOrder = () => {
               },
               {
                 "type": "text",
-                "text": orderDetails.notes
+                "text": orderDetails.notes == "" ? "no notes" : orderDetails.notes
               },
               {
                 "type": "text",
@@ -207,7 +246,6 @@ const SubmitOrder = () => {
         alert('Order submitted successfully and WhatsApp message sent!');
         // Clear form fields or redirect as needed
        
-        setOrderSubmitted(true);
       } else {
         console.error('Error sending WhatsApp message:', result);
         alert('Failed to send WhatsApp message. Please try again.');
