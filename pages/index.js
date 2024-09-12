@@ -101,8 +101,7 @@ const Home = ({ products, bannerData, brands }) => {
         <h3 className='category-title'>{translations[language].exploreProducts}</h3>
         <div className='products-container'>
           {filteredProducts.map((product) => (
-            product.quantity  > 0? 
-            <Product key={product._id} product={product} />: null
+            <Product key={product._id} product={product} />
           ))}
         </div>
       </div>
@@ -141,7 +140,6 @@ const Home = ({ products, bannerData, brands }) => {
           .map((category) => {
           const categoryProducts = products
             .filter((product) => product.categories.includes(category))
-            .filter((product) => product.quantity  > 0)
             .filter((product) => !displayedProducts.has(product._id)); // Exclude already displayed products
 
           // Add products to displayed list
@@ -156,8 +154,7 @@ const Home = ({ products, bannerData, brands }) => {
               <h3 className='category-title'>{category}</h3>
               <div className='products-container'>
                 {categoryProducts.map((product) => (
-                  product.quantity  > 0? 
-            <Product key={product._id} product={product} />: null
+                  <Product key={product._id} product={product} />
                 ))}
               </div>
             </div>

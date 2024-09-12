@@ -28,20 +28,40 @@ const ProductDetails = ({ product, products }) => {
   };
 
   const handleAddToCart = () => {
+    if (product.quantity  > 0 ){
+      if (product.quantity  < qty ){
+        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+        return;
+      }
     if (colors && colors.length > 0 && !selectedColor) {
       alert(translations[language].selectColorAlert);
       return;
     }
     onAdd(product, qty, selectedColor);
+  }
+  else{
+    alert("SOLD OUT!!!");
+    return;
+  }
   };
 
   const handleBuyNow = () => {
+    if (product.quantity  > 0 ){
+      if (product.quantity  <= qty ){
+        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+        return;
+      }
     if (colors && colors.length > 0 && !selectedColor) {
       alert(translations[language].selectColorAlert);
       return;
     }
     onAdd(product, qty, selectedColor);
     setShowCart(true);
+  }
+  else{
+    alert("SOLD OUT!!!");
+    return;
+  }
   };
 
   return (
@@ -175,7 +195,8 @@ const ProductDetails = ({ product, products }) => {
         <div className="marquee">
           <div className="maylike-products-container track">
             {products.map((item) => (
-              <Product key={item._id} product={item} />
+              product.quantity  > 0? 
+              <Product key={product._id} product={product} />: null
             ))}
           </div>
         </div>
