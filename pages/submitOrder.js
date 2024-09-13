@@ -46,12 +46,41 @@ const SubmitOrder = (products, bannerData, brands) => {
     // Validate form fields
     if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
       alert('Please fill out all required fields.');
-      return;
+      return ;
     }
-    sendEmail(event)
+    var status = await checkStorage();
+    if(status){
+      sendEmail(event)
+      setOrderSubmitted(true);
+    }
 
 
-    setOrderSubmitted(true);
+  };
+  
+  const checkStorage = async (event) => {
+
+    var status  = true;
+
+    // Use Promise.all to wait for all asynchronous operations to complete
+    await Promise.all(
+      cartItems.map(async (item) => {
+        const product = await client
+          .fetch(`*[_type == "product"  &&  _id == "${item._id}"]`) // Fetch the product's quantity
+          .then(result => result[0]); // Access the first result
+        if (! product.quantity >0)
+          {
+            alert(`The item ${item.name} can't be bought with this quantity`);
+            status = false;
+          }
+        if (product.quantity < item.quantity) {
+          alert(`The item ${item.name} can't be bought with this quantity`);
+          status = false;
+        }
+      })
+    );
+      return status;
+
+
 
   };
 

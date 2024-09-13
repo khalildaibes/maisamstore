@@ -10,6 +10,9 @@ import { client, urlFor, getUrlFromId } from "../../lib/client";
 import { Product } from "../../components";
 import { useStateContext } from '../../context/StateContext'; 
 import translations from '../../translations/translations';
+import { useRouter } from 'next/router';
+
+
 function videoAssetFor(source) {
   return getFileAsset(source, client.config());
 }
@@ -20,7 +23,7 @@ const ProductDetails = ({ product, products }) => {
   const [isVideoSelected, setIsVideoSelected] = useState(false);  // State to toggle between video and image
   const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);  // Index to track the selected video
   const [selectedColor, setSelectedColor] = useState(null);
-
+  const router = useRouter();
   const handleColorClick = (color) => {
     if (color.quantity > 0) {
       setSelectedColor(color);
@@ -28,6 +31,7 @@ const ProductDetails = ({ product, products }) => {
   };
 
   const handleAddToCart = () => {
+    router.replace(router.asPath);
     if (product.quantity  > 0 ){
     if (product.quantity  < qty ){
         alert("NO ENOUGH OF THIS PRODUCT IN STORE");
