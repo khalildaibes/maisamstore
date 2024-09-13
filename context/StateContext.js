@@ -26,6 +26,7 @@ export const StateContext = ({ children }) => {
     const checkProductInCart = cartItems.find(
       (item) => item._id === product._id
     );
+    window.location.reload(false);
     if (checkProductInCart) {
       var enough = true;
       cartItems.map((cartProduct) => {
