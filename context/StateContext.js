@@ -40,7 +40,7 @@ export const StateContext = ({ children }) => {
       );
 
       if (!enough){
-        alert(translations[language].soldOut.replace('${item.name}',cartProduct.name));
+        alert(translations[language].soldOut.replace('${item.name}',checkProductInCart.name));
         return ;
       }
     }

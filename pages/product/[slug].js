@@ -33,15 +33,15 @@ const ProductDetails = ({ product, products }) => {
   const handleAddToCart = () => {
     router.replace(router.asPath);
     if (product.quantity  > 0 ){
-    if (product.quantity  < qty ){
-        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+      if (product.quantity  < qty ){
+          alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+          return;
+        }
+      if (colors && colors.length > 0 && !selectedColor) {
+        alert(translations[language].selectColorAlert);
         return;
       }
-    if (colors && colors.length > 0 && !selectedColor) {
-      alert(translations[language].selectColorAlert);
-      return;
-    }
-    onAdd(product, qty, selectedColor);
+      onAdd(product, qty, selectedColor);
   } 
   else{
     alert(translations[language].soldOut.replace('${item.name}',product.name));
