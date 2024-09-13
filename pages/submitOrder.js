@@ -76,6 +76,10 @@ const SubmitOrder = (products, bannerData, brands) => {
           alert(translations[language].soldOut.replace('${item.name}',item.name));
           status = false;
         }
+        if (product.quantity - item.quantity < 0 ) {
+          alert(translations[language].soldOut.replace('${item.name}',item.name));
+          status = false;
+        }
       })
     );
       return status;
