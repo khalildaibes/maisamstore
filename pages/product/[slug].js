@@ -42,7 +42,7 @@ const ProductDetails = ({ product, products }) => {
       return;
     }
     onAdd(product, qty, selectedColor);
-  }
+  } 
   else{
     alert(translations[language].soldOut.replace('${item.name}',product.name));
     return;
