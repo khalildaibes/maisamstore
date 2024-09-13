@@ -44,7 +44,7 @@ const ProductDetails = ({ product, products }) => {
     onAdd(product, qty, selectedColor);
   }
   else{
-    alert("SOLD OUT!!!");
+    alert(translations[language].soldOut.replace('${item.name}',product.name));
     return;
   }
   };
@@ -63,7 +63,7 @@ const ProductDetails = ({ product, products }) => {
     setShowCart(true);
   }
   else{
-    alert("SOLD OUT!!!");
+    alert(translations[language].soldOut.replace('${item.name}',product.name));
     return;
   }
   };

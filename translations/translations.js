@@ -78,6 +78,7 @@ const translations = {
       brands: 'Brands',
       brandsDescription: 'Hot Brands',
       deliveryFee:"Delivery fee",
+      soldOut:'The item ${item.name} just was Sold out',
       allCategories: 'all products'
 
     
@@ -159,11 +160,13 @@ const translations = {
       brands: 'شركات',
       brandsDescription: 'الشركات الاكثر روجا',
       finishOrder: 'انهاء',
+      soldOut:'لقد تم نفاد المنتج ${item.name} للتو.',
       allCategories: 'كل المنتجات'
 
       
     },
     he: {
+      soldOut:'המוצר ${item.name} אזל מהמלאי הרגע.',
       palettes: 'פלטות',
       mascara: 'מסקרה',
       eyeshadow: 'צללית',

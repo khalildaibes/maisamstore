@@ -69,11 +69,11 @@ const SubmitOrder = (products, bannerData, brands) => {
           .then(result => result[0]); // Access the first result
         if (! product.quantity >0)
           {
-            alert(`The item ${item.name} can't be bought with this quantity`);
+            alert(translations[language].soldOut.replace('${item.name}',item.name));
             status = false;
           }
         if (product.quantity < item.quantity) {
-          alert(`The item ${item.name} can't be bought with this quantity`);
+          alert(translations[language].soldOut.replace('${item.name}',item.name));
           status = false;
         }
       })

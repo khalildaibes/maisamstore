@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-hot-toast"; // For making the pop-up notification
+import translations from '../translations/translations';
 
 const Context = createContext(); // Create context
 
@@ -39,7 +40,7 @@ export const StateContext = ({ children }) => {
       );
 
       if (!enough){
-        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+        alert(translations[language].soldOut.replace('${item.name}',cartProduct.name));
         return ;
       }
     }
@@ -100,7 +101,7 @@ export const StateContext = ({ children }) => {
           enough = false;
           }
       if (!enough){
-        alert("NO ENOUGH OF THIS PRODUCT IN STORE");
+        alert(translations[language].soldOut.replace('${item.name}',foundProduct.name));
         return ;
       }
       setCartItems([
