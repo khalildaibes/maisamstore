@@ -115,7 +115,6 @@ const SubmitOrder = (products, bannerData, brands) => {
         console.error('Oh no, the update failed: ', err.message)
       })});
 
-
     emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
@@ -134,7 +133,6 @@ const SubmitOrder = (products, bannerData, brands) => {
 
 
   const handleSubmitWhatsapp = async (event) => {
-    event.preventDefault();
 
     // Validate form fields
     if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
@@ -145,7 +143,7 @@ const SubmitOrder = (products, bannerData, brands) => {
     // Prepare data for API call
     const data = {
       "messaging_product": "whatsapp",
-      "to": "+972505831183",
+      "to": "972509977084",
       "type": "template",
       "template": {
         "name": "new_order",
