@@ -10,6 +10,7 @@ const SubmitOrder = (products, bannerData, brands) => {
 
   const [orderDetails, setOrderDetails] = useState({
     phoneNumber: "",
+    retypephoneNumber: "", // New field for retype password
     name: "",
     addressType: "",
     address: "",
@@ -17,8 +18,8 @@ const SubmitOrder = (products, bannerData, brands) => {
     city: "",
     paymentMethod: "",
     notes: "",
-    subtoital :"",
-    cart:"",
+    subtotal: "",
+    cart: "",
   });
 
   const [deliveryFee, setDeliveryFee] = useState(0); // State to track delivery fee
@@ -47,91 +48,55 @@ const SubmitOrder = (products, bannerData, brands) => {
     // Validate form fields
     if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
       alert('Please fill out all required fields.');
-      return ;
+      return;
     }
+    const phoneNumberRegex = /^05\d{8}$/;
+    if (!phoneNumberRegex.test(orderDetails.phoneNumber)) {
+      alert('Please enter a valid phone number starting with "05" and exactly 10 digits.');
+      return;
+    }
+    
+    // Validate retype password
+    if (orderDetails.retypephoneNumber !== orderDetails.phoneNumber) {
+      alert('Retyped phone number must match the phone number.');
+      return;
+    }
+
+    // Show confirmation dialog before proceeding
+    if (!window.confirm('Are you sure you want to submit the order?')) {
+      return;
+    }
+
+    // Continue with the order submission
     var status = await checkStorage();
-    if(status){
-      addOrder(event)
-      sendEmail(event)
+    if (status) {
+      addOrder(event);
+      decreaseFromDB(cartItems)
+      sendEmail(event);
+      createOrderEntregas(orderDetails)
       setOrderSubmitted(true);
     }
-
-
   };
 
+  const decreaseFromDB = async (cartItems) => {
 
-
-
-  const addOrder = async (event) => {
-
-  // Prepare the order data to be saved in Sanity
-  const orderData = {
-    _type: 'orderDetails',
-    status: 'Pending', // Set initial status
-    cost: totalWithDelivery,
-    phoneNumber: orderDetails.phoneNumber,
-    name: orderDetails.name,
-    addressType: orderDetails.addressType,
-    address: orderDetails.address,
-    street: orderDetails.street,
-    city: orderDetails.city,
-    paymentMethod: orderDetails.paymentMethod,
-    notes: orderDetails.notes || '',
-    subtotal: totalPrice,
-    cart: cartItems.map(item => ({
-      _type: 'cartItem',
-      productName: item.name,
-      quantity: item.quantity,
-      price: item.price,
-      _key: uuidv4(), // Generate a unique key
-    })),
+  cartItems.map(item => {
+    client
+    .patch(item._id) // Document ID to patch
+    .set({"quantity": products.products.find((product)=> product._id === item._id)?.quantity - item.quantity }) // Shallow merge
+    .commit() // Perform the patch and return a promise
+    .then((item) => {
+      console.log('document updated! New orer:')
+      console.log(item)
+    })
+    .catch((err) => {
+      console.error('Oh no, the update failed: ', err.message)
+    })});
   };
 
-  try {
-    // Save the order data to Sanity
-    await client.create(orderData);
-  }
-   catch (error) {
-  console.error('Error saving order to Sanity:', error);
-  alert('Failed to save order. Please try again.');
-  }
-}
-
+  // Clear the form after sending
   
-  const checkStorage = async (event) => {
-
-    var status  = true;
-
-    // Use Promise.all to wait for all asynchronous operations to complete
-    await Promise.all(
-      cartItems.map(async (item) => {
-        const product = await client
-          .fetch(`*[_type == "product"  &&  _id == "${item._id}"]`) // Fetch the product's quantity
-          .then(result => result[0]); // Access the first result
-        if (! product.quantity >0)
-          {
-            alert(translations[language].soldOut.replace('${item.name}',item.name));
-            status = false;
-          }
-        if (product.quantity < item.quantity) {
-          alert(translations[language].soldOut.replace('${item.name}',item.name));
-          status = false;
-        }
-        if (product.quantity - item.quantity < 0 ) {
-          alert(translations[language].soldOut.replace('${item.name}',item.name));
-          status = false;
-        }
-      })
-    );
-      return status;
-
-
-
-  };
-
-
-  const sendEmail = (e) => {
-    e.preventDefault();
+  const sendEmail = async (orderDetails) => {
     var  message= {
       "to_name":"khalilok",
       "from_name":"new order",
@@ -143,206 +108,102 @@ const SubmitOrder = (products, bannerData, brands) => {
         `).join("                         ") + "   "  + JSON.stringify(orderDetails, null, 2) )
     }
 
-    cartItems.map(item => {
-      client
-      .patch(item._id) // Document ID to patch
-      .set({"quantity": products.products.find((product)=> product._id === item._id)?.quantity - item.quantity }) // Shallow merge
-      .commit() // Perform the patch and return a promise
-      .then((item) => {
-        console.log('document updated! New orer:')
-        console.log(item)
-      })
-      .catch((err) => {
-        console.error('Oh no, the update failed: ', err.message)
-      })});
-
     emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
-      .then((response) => {
-        console.log('SUCCESS!', response.status, response.text);
-        alert('תודה רבה לכם על הקנייה!');
-      }, (error) => {
-        console.error('FAILED...', error);
-        alert('opps we didnt complete the purchase.');
-      });
+    .then((response) => {
+      console.log('SUCCESS!', response.status, response.text);
+      alert('תודה רבה לכם על הקנייה!');
+    }, (error) => {
+      console.error('FAILED...', error);
+      alert('opps we didnt complete the purchase.');
+    });
 
-    // Clear the form after sending
 
   };
-
-
-
-
-
-  const handleSubmitWhatsapp = async (event) => {
-
-    // Validate form fields
-    if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
-      alert('Please fill out all required fields.');
-      return;
-    }
-
-    // Prepare data for API call
-    const data = {
-      "messaging_product": "whatsapp",
-      "to": "972509977084",
-      "type": "template",
-      "template": {
-        "name": "new_order",
-        "language": {
-          "code": "en",
-          "policy": "deterministic"
-        },
-        "components": [
-          {
-            "type": "body",
-            "parameters": [
-              {
-                "type": "text",
-                "text": orderDetails.name
-              },
-              {
-                "type": "text",
-                "text": `+972${orderDetails.phoneNumber.substring(1)}`
-              },
-              {
-                "type": "text",
-                "text": orderDetails.address
-              },
-              {
-                "type": "text",
-                "text": orderDetails.notes == "" ? "no notes" : orderDetails.notes
-              },
-              {
-                "type": "text",
-                "text": orderDetails.paymentMethod
-              },
-              {
-                "type": "text",
-                "text": cartItems.map(item => `product: ${item.name} \\n quantity: ${item.quantity} `).join(" \\n\\n")
-              }
-            ]
-          }
-        ]
-      }
-    };
-
+  const createOrderEntregas = async (orderDetails) => {
     try {
-      // Call the API route to send WhatsApp message
-      const response = await fetch('https://graph.facebook.com/v18.0/209317558942807/messages', {
+      // Make the POST request to the Next.js API route, passing the order details
+      const response = await fetch('/api/delevery', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
-          'Cookie': 'ps_l=0; ps_n=0'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data), // Corrected payload
+        body: JSON.stringify(orderDetails) // Send order details from the client
       });
-
+  
       const result = await response.json();
-
+  
+      // Check if the response was successful
       if (response.ok) {
-        console.log('WhatsApp message sent successfully:', result);
-        alert('Order submitted successfully and WhatsApp message sent!');
-        // Clear form fields or redirect as needed
-       
+        console.log('Order created successfully:', result);
+        // Handle success (e.g., clear form fields, redirect, etc.)
       } else {
-        console.error('Error sending WhatsApp message:', result);
-        alert('Failed to send WhatsApp message. Please try again.');
+        console.error('Error creating order:', result);
+        // Handle error response
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while sending the order. Please try again.');
+      // Handle network or other errors
     }
   };
 
-
-
-
-
-
-  const handleSubmitWhatsapp_khalil = async (event) => {
-    event.preventDefault();
-
-    // Validate form fields
-    if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
-      alert('Please fill out all required fields.');
-      return;
-    }
-
-    // Prepare data for API call
-    const data = {
-      "messaging_product": "whatsapp",
-      "to": "972509977084",
-      "type": "template",
-      "template": {
-        "name": "new_order",
-        "language": {
-          "code": "en",
-          "policy": "deterministic"
-        },
-        "components": [
-          {
-            "type": "body",
-            "parameters": [
-              {
-                "type": "text",
-                "text": orderDetails.name
-              },
-              {
-                "type": "text",
-                "text": `+972${orderDetails.phoneNumber.substring(1)}`
-              },
-              {
-                "type": "text",
-                "text": orderDetails.address
-              },
-              {
-                "type": "text",
-                "text": orderDetails.notes == "" ? "no notes" : orderDetails.notes
-              },
-              {
-                "type": "text",
-                "text": orderDetails.paymentMethod
-              },
-              {
-                "type": "text",
-                "text": cartItems.map(item => `product: ${item.name} \\n quantity: ${item.quantity} `).join(" \\n\\n")
-              }
-            ]
-          }
-        ]
-      }
+  const addOrder = async (event) => {
+    // Prepare the order data to be saved in Sanity
+    const orderData = {
+      _type: 'orderDetails',
+      status: 'Pending', // Set initial status
+      cost: totalWithDelivery,
+      phoneNumber: orderDetails.phoneNumber,
+      name: orderDetails.name,
+      addressType: orderDetails.addressType,
+      address: orderDetails.address,
+      street: orderDetails.street,
+      city: orderDetails.city,
+      paymentMethod: orderDetails.paymentMethod,
+      notes: orderDetails.notes || '',
+      subtotal: totalPrice,
+      cart: cartItems.map(item => ({
+        _type: 'cartItem',
+        productName: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        _key: uuidv4(), // Generate a unique key
+      })),
     };
 
     try {
-      // Call the API route to send WhatsApp message
-      const response = await fetch('https://graph.facebook.com/v18.0/209317558942807/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer EAANVrunrZADwBO7r4C0KoWsjkWp0nLIXqFIZCDYbHwFLtieaBgxUQWV3sJC0CZBupVZCG2t5gOFys2SoJfKc6fBrmAPpZCM6sGuBdXeRORYJk9a3VKYVZCRNaHMkKi3fNK7LFjSYW4mdg7Tvn9DVsWMnzv1NFZA1rZCZBysTZCJnQayUuFI9EFh7EQRXYfLpburii4BZCifRw2ibceclhfZA',
-          'Cookie': 'ps_l=0; ps_n=0'
-        },
-        body: JSON.stringify(data), // Corrected payload
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        console.log('WhatsApp message sent successfully:', result);
-        alert('Order submitted successfully and WhatsApp message sent!');
-        // Clear form fields or redirect as needed
-       
-      } else {
-        console.error('Error sending WhatsApp message:', result);
-        alert('Failed to send WhatsApp message. Please try again.');
-      }
+      // Save the order data to Sanity
+      await client.create(orderData);
     } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred while sending the order. Please try again.');
+      console.error('Error saving order to Sanity:', error);
+      alert('Failed to save order. Please try again.');
     }
   };
 
+  const checkStorage = async (event) => {
+    var status = true;
+
+    // Use Promise.all to wait for all asynchronous operations to complete
+    await Promise.all(
+      cartItems.map(async (item) => {
+        const product = await client
+          .fetch(`*[_type == "product"  &&  _id == "${item._id}"]`) // Fetch the product's quantity
+          .then(result => result[0]); // Access the first result
+        if (!product.quantity > 0) {
+          alert(translations[language].soldOut.replace('${item.name}', item.name));
+          status = false;
+        }
+        if (product.quantity < item.quantity) {
+          alert(translations[language].soldOut.replace('${item.name}', item.name));
+          status = false;
+        }
+        if (product.quantity - item.quantity < 0) {
+          alert(translations[language].soldOut.replace('${item.name}', item.name));
+          status = false;
+        }
+      })
+    );
+    return status;
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -371,10 +232,20 @@ const SubmitOrder = (products, bannerData, brands) => {
             <div className="form-group">
               <label htmlFor="phoneNumber">{translations[language].phoneNumber}</label>
               <input
-                type="text"
-                id="phoneNumber"
+                type="tel" // Changed to "tel" for phone number input                id="phoneNumber"
                 name="phoneNumber"
                 value={orderDetails.phoneNumber}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="retypephoneNumber">Retype Your phone Number</label>
+              <input
+                type="tel" // Changed to "tel" for phone number input
+                id="retypephoneNumber"
+                name="retypephoneNumber"
+                value={orderDetails.retypephoneNumber}
                 onChange={handleInputChange}
                 required
               />
@@ -415,7 +286,7 @@ const SubmitOrder = (products, bannerData, brands) => {
                 required
               />
             </div>
-           
+
             <div className="form-group">
               <label htmlFor="paymentMethod">{translations[language].paymentMethod}</label>
               <select
