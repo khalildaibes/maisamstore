@@ -70,10 +70,10 @@ const SubmitOrder = (products, bannerData, brands) => {
     // Continue with the order submission
     var status = await checkStorage();
     if (status) {
-      addOrder(event);
-      decreaseFromDB(cartItems)
+      // addOrder(event);
+      // decreaseFromDB(cartItems)
       sendEmail(event);
-      createOrderEntregas(orderDetails)
+      // createOrderEntregas(orderDetails)
       setOrderSubmitted(true);
     }
   };
@@ -96,7 +96,8 @@ const SubmitOrder = (products, bannerData, brands) => {
 
   // Clear the form after sending
   
-  const sendEmail = async (orderDetails) => {
+  const sendEmail = (e) => {
+    e.preventDefault();
     var  message= {
       "to_name":"khalilok",
       "from_name":"new order",
@@ -108,17 +109,21 @@ const SubmitOrder = (products, bannerData, brands) => {
         `).join("                         ") + "   "  + JSON.stringify(orderDetails, null, 2) )
     }
 
-    emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
-    .then((response) => {
-      console.log('SUCCESS!', response.status, response.text);
-      alert('תודה רבה לכם על הקנייה!');
-    }, (error) => {
-      console.error('FAILED...', error);
-      alert('opps we didnt complete the purchase.');
-    });
+  
 
+    emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        alert('תודה רבה לכם על הקנייה!');
+      }, (error) => {
+        console.error('FAILED...', error);
+        alert('opps we didnt complete the purchase.');
+      });
+
+    // Clear the form after sending
 
   };
+
   const createOrderEntregas = async (orderDetails) => {
     try {
       // Make the POST request to the Next.js API route, passing the order details
