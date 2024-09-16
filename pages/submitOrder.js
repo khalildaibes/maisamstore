@@ -3,6 +3,7 @@ import { useStateContext } from "../context/StateContext";
 import { urlFor, client } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
 import emailjs from 'emailjs-com';
+import { v4 as uuidv4 } from 'uuid'; // Import uuid to generate unique keys
 
 const SubmitOrder = (products, bannerData, brands) => {
   const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
@@ -50,12 +51,52 @@ const SubmitOrder = (products, bannerData, brands) => {
     }
     var status = await checkStorage();
     if(status){
+      addOrder(event)
       sendEmail(event)
       setOrderSubmitted(true);
     }
 
 
   };
+
+
+
+
+  const addOrder = async (event) => {
+
+  // Prepare the order data to be saved in Sanity
+  const orderData = {
+    _type: 'orderDetails',
+    status: 'Pending', // Set initial status
+    cost: totalWithDelivery,
+    phoneNumber: orderDetails.phoneNumber,
+    name: orderDetails.name,
+    addressType: orderDetails.addressType,
+    address: orderDetails.address,
+    street: orderDetails.street,
+    city: orderDetails.city,
+    paymentMethod: orderDetails.paymentMethod,
+    notes: orderDetails.notes || '',
+    subtotal: totalPrice,
+    cart: cartItems.map(item => ({
+      _type: 'cartItem',
+      productName: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      _key: uuidv4(), // Generate a unique key
+    })),
+  };
+
+  try {
+    // Save the order data to Sanity
+    await client.create(orderData);
+  }
+   catch (error) {
+  console.error('Error saving order to Sanity:', error);
+  alert('Failed to save order. Please try again.');
+  }
+}
+
   
   const checkStorage = async (event) => {
 
