@@ -83,9 +83,9 @@ const SubmitOrder = (products, bannerData, brands) => {
         .catch((err) => {
           console.error('Oh no, the update failed: ', err.message)
         })});
-      // sendEmail(event);
+      sendEmail(event);
       // createOrderEntregas(orderDetails)
-      // setOrderSubmitted(true);
+      setOrderSubmitted(true);
     }
   };
 
