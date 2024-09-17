@@ -71,27 +71,27 @@ const SubmitOrder = (products, bannerData, brands) => {
     var status = await checkStorage();
     if (status) {
       // addOrder(event);
-      // decreaseFromDB(cartItems)
-      sendEmail(event);
+      cartItems.map(item => {
+        client
+        .patch(item._id) // Document ID to patch
+        .set({"quantity": products.products.find((product)=> product._id === item._id)?.quantity - item.quantity }) // Shallow merge
+        .commit() // Perform the patch and return a promise
+        .then((item) => {
+          console.log('document updated! New orer:')
+          console.log(item)
+        })
+        .catch((err) => {
+          console.error('Oh no, the update failed: ', err.message)
+        })});
+      // sendEmail(event);
       // createOrderEntregas(orderDetails)
-      setOrderSubmitted(true);
+      // setOrderSubmitted(true);
     }
   };
 
   const decreaseFromDB = async (cartItems) => {
 
-  cartItems.map(item => {
-    client
-    .patch(item._id) // Document ID to patch
-    .set({"quantity": products.products.find((product)=> product._id === item._id)?.quantity - item.quantity }) // Shallow merge
-    .commit() // Perform the patch and return a promise
-    .then((item) => {
-      console.log('document updated! New orer:')
-      console.log(item)
-    })
-    .catch((err) => {
-      console.error('Oh no, the update failed: ', err.message)
-    })});
+ 
   };
 
   // Clear the form after sending
