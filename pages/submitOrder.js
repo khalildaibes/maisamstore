@@ -70,7 +70,7 @@ const SubmitOrder = (products, bannerData, brands) => {
     // Continue with the order submission
     var status = await checkStorage();
     if (status) {
-      // addOrder(event);
+      addOrder(event);
       cartItems.map(item => {
         client
         .patch(item._id) // Document ID to patch
@@ -84,8 +84,8 @@ const SubmitOrder = (products, bannerData, brands) => {
           console.error('Oh no, the update failed: ', err.message)
         })});
       sendEmail(event);
-      // createOrderEntregas(orderDetails)
       setOrderSubmitted(true);
+      createOrderEntregas({ orderdetailes: orderDetails })
     }
   };
 
@@ -127,7 +127,7 @@ const SubmitOrder = (products, bannerData, brands) => {
   const createOrderEntregas = async (orderDetails) => {
     try {
       // Make the POST request to the Next.js API route, passing the order details
-      const response = await fetch('/api/delevery', {
+      const response = await fetch('/api/delivery', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -2,31 +2,32 @@
 export default async function handler(req, res) {
     if (req.method === 'POST') {
       // Extract data from the client request
-      const {
-        customer_address,
-        customer_mobile,
-        customer_name,
-        customer_area,
-        reference_id,
-        cost
-      } = req.body;
+      const { orderdetailes } = req.body; 
   
+    // Now you can use orderdetailes in your code
+    console.log(orderdetailes);
+
       // Prepare the data object to send to the external API
-      const data = {
-        "jsonrpc": "2.0",
-        "params": {
-          "login": "olivery_bs",
-          "password": "12345678",
-          "db": "entregas",
-          "customer_address": customer_address,
-          "customer_mobile": customer_mobile,
-          "customer_name": customer_name,
-          "customer_area": customer_area,
-          "reference_id": reference_id,
-          "cost": cost
+      const data =         {
+        "jsonrpc": "2.0", 
+                "params": { 
+                "login":"0505831183", 
+                "password": "123456789", 
+                "db":"entregas",
+                "customer_address":  orderdetailes.address,
+                "customer_mobile": orderdetailes.phoneNumber,
+                "customer_name": orderdetailes.name,
+                "customer_area": orderdetailes.addressType ===  "ARAB_48" ?"צפון" : "ירושלים" ,
+                "customer_sub_area": "",
+                "reference_id":"",
+                "cost":orderdetailes.subtotal,
+                "no_of_items": orderdetailes.cart.length,
+                "product_note": orderdetailes.notes + "הלקוח נמצא ב "+ orderdetailes.customer_area ===  "ARAB_48" ? " שטחי ישראל " : "שטחי הרשות הפלסטינית"
+            }
         }
-      };
-  
+        console.log(data)
+
+        
       try {
         // Make the POST request to the external API
         const response = await fetch('https://entregas.olivery.io/create_order', {
