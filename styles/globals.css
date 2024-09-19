@@ -1804,3 +1804,77 @@ h1 {
 .order-card button:hover:enabled {
   background-color: #45a049;
 }
+.accessibilityToolbar {
+  position: fixed;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+  width: 200px;
+  display:none;
+}
+
+    /* Accessibility toolbar styling */
+    .accessibilityToolbar.active {
+      position: fixed;
+      top: 0;
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      z-index: 1000;
+      width: 200px;
+      display:inline;
+    }
+
+    .accessibilityToolbar button {
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 14px;
+      background-color: #444;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .accessibilityToolbar button:hover {
+      background-color: #555;
+    }
+
+    /* Highlight focus for keyboard navigation */
+    :focus {
+      outline: 2px dashed #000;
+    }
+
+    /* Styles for high contrast */
+    .high-contrast-black {
+      background-color: black;
+      color: yellow;
+    }
+
+    .high-contrast-white {
+      background-color: white;
+      color: black;
+    }
+
+    /* Styles for grayscale */
+    .grayscale {
+      filter: grayscale(100%);
+    }
+
+    /* Styles for readable font */
+    .readable-font {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Styles for underlining links */
+    .underline-links a {
+      text-decoration: underline;
+    }
+    .ngeshot{
+      position: fixed; 
+      top: 10px;
+       right: 10px;
+        z-index: 1000;
+    }
