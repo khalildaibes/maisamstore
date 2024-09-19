@@ -1814,6 +1814,42 @@ h1 {
   display:none;
 }
 
+.accessibility-float-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.accessibility-float-btn:hover {
+  background-color: #333;
+}
+
+/* Styles for the accessibility toolbar */
+.accessibilityToolbar button {
+  background: #444;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  cursor: pointer;
+}
+
+.accessibilityToolbar button:hover {
+  background: #555;
+}
     /* Accessibility toolbar styling */
     .accessibilityToolbar.active {
       position: fixed;

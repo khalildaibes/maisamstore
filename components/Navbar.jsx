@@ -4,6 +4,7 @@ import { AiOutlineShopping, AiOutlineMenu, AiOutlineClose } from 'react-icons/ai
 import { Cart } from '.';
 import { useStateContext } from '../context/StateContext';
 import translations from '../translations/translations'; // Import translations
+import { FaWheelchair } from 'react-icons/fa'; // Import wheelchair icon
 
 const Navbar = () => {
   const { showCart, setShowCart, totalQuantities } = useStateContext();
@@ -123,8 +124,12 @@ const Navbar = () => {
       </nav>
 
       {/* Accessibility Button */}
-      <button id="accessibilityButton" className="ngeshot" onClick={toggleAccessibilityToolbar}>
-        נגישות
+      <button
+        id="accessibilityButton"
+        className="accessibility-float-btn"
+        onClick={toggleAccessibilityToolbar}
+      >
+        <FaWheelchair />
       </button>
 
       {/* Accessibility Toolbar */}
