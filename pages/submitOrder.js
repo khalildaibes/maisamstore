@@ -98,6 +98,7 @@ const SubmitOrder = (products, bannerData, brands) => {
   
   const sendEmail = (e) => {
     e.preventDefault();
+    orderDetails.subtotal = totalWithDelivery;
     var  message= {
       "to_name":"khalilok",
       "from_name":"new order",
