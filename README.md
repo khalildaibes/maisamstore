@@ -183,3 +183,25 @@ For any further questions or issues, feel free to contact the support team at `s
 
 --- 
 
+
+
+
+## Usage 💻
+How to change this code to be the code for youir ecommerce project.
+first go to the page where  "projectId": "project value", in hte file sanity.json
+chage it to the sanity of your project. 
+chnage the value on "" to be the vlue of your project 
+
+change also the name and dataset if it dosen t match basicly leave the dataset for the development part 
+you can change oit later tp be prod.
+
+
+in the folder schema you can chage the tables of the sanity project 
+
+
+
+
+
+go to .env file in the main proejct 
+cahnge the vlaues as to be your values 
+you can discard the stripe if you dont want it 

@@ -36,7 +36,7 @@ const BrandPage = ({ brands }) => {
       {/* Brands Section */}
       <div className="brands-section">
         <div className="brands-container">
-        <Link  key={`Link_${maisamMakeupBrand._id}}`} href={`/catgeory_products?categoryName=${maisamMakeupBrand.name}`}>
+        {/* <Link  key={`Link_${maisamMakeupBrand._id}}`} href={`/catgeory_products?categoryName=${maisamMakeupBrand.name}`}>
             
             <div key={maisamMakeupBrand._id} className="brand-item">
               <div className="brand-image-container">
@@ -44,8 +44,8 @@ const BrandPage = ({ brands }) => {
                 <div className="brand-name">{maisamMakeupBrand.name}</div>
               </div>
             </div>
-            </Link>
-               <Link  key={`Link_${sephora._id}}`} href={`/catgeory_products?categoryName=${sephora.name}`}>
+            </Link> */}
+               {/* <Link  key={`Link_${sephora._id}}`} href={`/catgeory_products?categoryName=${sephora.name}`}>
             
             <div key={sephora._id} className="brand-item">
               <div className="brand-image-container">
@@ -53,7 +53,7 @@ const BrandPage = ({ brands }) => {
                 <div className="brand-name">{sephora.name}</div>
               </div>
             </div>
-            </Link>
+            </Link> */}
           {brands.filter((brand)=> brand.name!="Maisam Makeup" && brand.name!="SEPHORA" ).map((brand) => (
             <Link  key={`Link_${brand._id}}`} href={`/catgeory_products?categoryName=${brand.name}`}>
             

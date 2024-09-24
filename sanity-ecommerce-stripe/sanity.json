@@ -1,11 +1,11 @@
 {
   "root": true,
   "api": {
-    "projectId": "cfqk7ud0",
+    "projectId": "albtn5mx",
     "dataset": "dev"
   },
   "project": {
-    "name": "ecommerce-stripe"
+    "name": "CleanPlus"
   },
   "plugins": [
     "@sanity/base",
