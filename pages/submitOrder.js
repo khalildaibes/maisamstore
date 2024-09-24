@@ -85,7 +85,7 @@ const SubmitOrder = (products, bannerData, brands) => {
         })});
       sendEmail(event);
       setOrderSubmitted(true);
-      createOrderEntregas({ orderdetailes: orderDetails })
+      // createOrderEntregas({ orderdetailes: orderDetails })
     }
   };
 
