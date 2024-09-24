@@ -25,10 +25,10 @@ Brief description of your project. Explain its purpose, features, and technologi
 ## Installation 💻
 
 ### Prerequisites
-Before installation, make sure you have the following installed:
+<!-- Before installation, make sure you have the following installed:
 
 - [Software 1](https://link-to-software)
-- [Software 2](https://link-to-software)
+- [Software 2](https://link-to-software) -->
 
 ### Steps to Install
 
