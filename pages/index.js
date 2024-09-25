@@ -47,7 +47,7 @@ const Home = ({ products, bannerData, brands }) => {
             </Link> */}
               
           {brands.filter((brand)=> brand.name!="Maisam Makeup" && brand.name!="SEPHORA" ).map((brand) => (
-             <Link  key={`Link_${brand._id}}`} href={`/catgeory_products?categoryName=${brand.name}`}> */}
+             <Link  key={`Link_${brand._id}}`} href={`/catgeory_products?categoryName=${brand.name}`}> 
             
             <div key={brand._id} className="brand-item">
               <div className="brand-image-container">
