@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { client } from '../lib/client';
 import { Product, FooterBanner, HeroBanner } from '../components';
 import translations from '../translations/translations'; // Import translations
@@ -7,7 +7,28 @@ import { urlFor } from '../lib/client';
 import Link from 'next/link';
 import { FaFilter } from 'react-icons/fa'; // Import the filter icon from react-icons
 const Home = ({ products, bannerData, brands }) => {
-  const { language } = useStateContext(); // Assuming language is managed in context
+  const { language, categories, expanded, toggleExpand, fetchCategories } = useStateContext();
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [visibleCategories, setVisibleCategories] = useState([]);
+
+  useEffect(() => {
+    // Fetch categories when the component mounts
+    fetchCategories();
+  }, [fetchCategories]);
+
+  useEffect(() => {
+    // Handle category visibility when categories or expanded state changes
+    if (categories) {
+      setVisibleCategories(expanded ? Object.keys(categories) : Object.keys(categories).slice(0, 3));
+    }
+  }, [categories, expanded]);
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+
   const [selectedCategory, setSelectedCategory] = useState('all'); // State to track the selected category
 
   const uniqueBrands = [...new Set(products.map((product) => product.brand))];
@@ -19,7 +40,7 @@ const Home = ({ products, bannerData, brands }) => {
   // Step 2: Filter products based on the selected category
   const filteredProducts = selectedCategory === 'all' 
     ? products 
-    : products.filter((product) => product.categories.trim().includes(selectedCategory.trim()));
+    : products.filter((product) => product.categories.find((c)=>c.trim().includes(selectedCategory.trim())));
     const displayedProducts = new Set();
 
 
@@ -33,6 +54,9 @@ const Home = ({ products, bannerData, brands }) => {
         <h2>{translations[language].brands}</h2>
         <p>{translations[language].brandsDescription}</p>
       </div>
+      <div className="wrapper">
+    {showPopup && <Popup onClose={closePopup} />} 
+  </div>
       {/* Brands Section */}
       <div className="brands-section">
         <div className="brands-container">
@@ -59,7 +83,29 @@ const Home = ({ products, bannerData, brands }) => {
           ))}
         </div>
       </div>
-
+{/* Dynamic Section for Services */}
+<section className="services-section">
+        <div className="service-item">
+          <img src='/truck-stroke-rounded.svg' alt={translations[language].fastDelivery} width={30} height={30}/>
+          <h3>{translations[language].fastDelivery}</h3>
+          <p>{translations[language].fastDeliveryDescription}</p>
+        </div>
+        <div className="service-item">
+          <img src="/location-01-stroke-rounded.svg" alt={translations[language].selfPickup} width={30} height={30} /> 
+          <h3>{translations[language].selfPickup}</h3>
+          <p>{translations[language].selfPickupDescription}</p>
+        </div>
+        <div className="service-item">
+          <img src="/security-check-stroke-rounded.svg" alt={translations[language].securePayment} width={30} height={30} /> 
+          <h3>{translations[language].securePayment}</h3>
+          <p>{translations[language].securePaymentDescription}</p>
+        </div>
+        <div className="service-item">
+          <img src="/customer-support-stroke-rounded.svg" alt={translations[language].customerSupport} width={30} height={30} /> 
+          <h3>{translations[language].customerSupport}</h3>
+          <p>{translations[language].customerSupportDescription}</p>
+        </div>
+      </section>
 
       <div className='products-heading'>
         <h2>{translations[language].bestSellingProducts}</h2>
@@ -77,13 +123,17 @@ const Home = ({ products, bannerData, brands }) => {
         </button>
 
         {allCategories.map((category) => (
-          category!=" " && category!=""&& !brands.some((brand)=>brand.name.trim() === category.trim()) ?<button 
+          category!=" " && category!=""&& !brands.some((brand)=>brand.name.trim() === category.trim()) 
+          ?
+          <button 
             key={category}
             className={`category-button ${selectedCategory === category ? 'active' : ''}`}
             onClick={() => setSelectedCategory(category)}
           >
             {category}
-          </button>:null
+          </button>
+          :
+          null
         ))}
       </div>
 
@@ -103,11 +153,12 @@ const Home = ({ products, bannerData, brands }) => {
         <h2>{translations[language].aboutUs}</h2>
         <p>{translations[language].aboutUsDescription}</p>
         <div className='aboutImages'>
-          <img src="/makeup1.jpg" alt="Makeup Products" />
-          <img src="/makeup2.jpg" alt="Makeup Application" />
-          <img src="/makeup3.jpg" alt="Makeup Kit" />
+          <img src="/clean0.jpeg" alt="Makeup Products" />
+          <img src="/clean3.jpeg" alt="Makeup Application" />
+          <img src="/clean2.jpeg" alt="Makeup Kit" />
         </div>
       </div>
+
 
       {/* Testimonials Section */}
       <div className='testimonialsSection'>
@@ -128,10 +179,9 @@ const Home = ({ products, bannerData, brands }) => {
       {/* Render products grouped by their categories, excluding duplicates and those with same name as brand */}
       <div className='categories-container'>
         {allCategories
-          .filter((category) => !brands.some((brand) => brand.name === category)) // Exclude categories that match brand names
+          .filter((category) => !brands.some((brand) => brand.name.trim() === category.trim())) // Exclude categories that match brand names
           .map((category) => {
           const categoryProducts = products
-            .filter((product) => product.categories.includes(category))
             .filter((product) => !displayedProducts.has(product._id)); // Exclude already displayed products
 
           // Add products to displayed list
@@ -163,6 +213,11 @@ const Home = ({ products, bannerData, brands }) => {
           <li>{translations[language].excellentCustomerService}</li>
         </ul>
       </div>
+      
+      <section>
+      <iframe src="https://embed.waze.com/iframe?zoom=13&lat=32.751917&lon=35.345917&pin=1"
+            width="100%" height="520"></iframe>
+      </section>
 
     </>
   );

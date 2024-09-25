@@ -7,8 +7,7 @@ import translations from '../translations/translations'; // Import translations
 import { FaWheelchair } from 'react-icons/fa'; // Import wheelchair icon
 
 const Navbar = () => {
-  const { showCart, setShowCart, totalQuantities } = useStateContext();
-  const { language, changeLanguage } = useStateContext();
+  const { showCart, setShowCart, totalQuantities, categories, language, changeLanguage } = useStateContext();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isToolbarVisible, setIsToolbarVisible] = useState(false); // State to manage toolbar visibility
@@ -111,17 +110,17 @@ const Navbar = () => {
         />
       </Link>
 
-      {/* Navigation Links */}
-      <nav className="navbar">
+ {/* Navigation Links */}
+ <nav className="navbar">
         <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-          <Link href="/brands">{translations[language].brands}</Link>
-          <Link href="/catgeory_products?categoryName=Face">{translations[language].face}</Link>
-          <Link href="/catgeory_products?categoryName=Cheeks">{translations[language].cheeks}</Link>
-          <Link href="/catgeory_products?categoryName=Eyes">{translations[language].eyes}</Link>
-          <Link href="/catgeory_products?categoryName=Lips">{translations[language].lips}</Link>
-          <Link href="/catgeory_products?categoryName=Hair">{translations[language].hair}</Link>
+          {Object.keys(categories).slice(0, isMobile ? undefined : 6).map((category) => (
+            <Link legacyBehavior href={`/catgeory_products?categoryName=${category}`} key={category}>
+              <a>{category.replace("_", " ")}</a>
+            </Link>
+          ))}
         </div>
       </nav>
+
 
       {/* Accessibility Button */}
       <button

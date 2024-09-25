@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-hot-toast"; // For making the pop-up notification
-import translations from '../translations/translations';
+import { client, urlFor } from "../lib/client";
 
 const Context = createContext(); // Create context
 
@@ -10,7 +10,53 @@ export const StateContext = ({ children }) => {
   const [totalPrice, setTotalPrice] = useState(0); // State for total price
   const [totalQuantities, setTotalQuantities] = useState(0); // State for total quantities
   const [qty, setQty] = useState(1); // State for individual product quantity
-  const [language, setLanguage] = useState('en'); // State for managing the selected language
+  const [language, setLanguage] = useState('he'); // State for managing the selected language
+  const [categories, setCategories] = useState({}); // State for categories
+  const [expanded, setExpanded] = useState(false); // For handling expanded categories
+
+
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
+
+
+
+  // Fetch categories and products and store them in context
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const query = '*[_type == "product"]'; 
+      const products = await client.fetch(query); 
+      
+      const categoryMap = {};
+      products.forEach(product => {
+        product.categories.forEach(category => {
+          if (!categoryMap[category]) {
+            categoryMap[category] = product; // Set the first product for this category
+          }
+        });
+      });
+      setCategories(categoryMap); // Store categories in context
+    };
+
+    fetchCategories();
+  }, []);
+  const fetchCategories = async () => {
+    const query = '*[_type == "product"]'; 
+    const products = await client.fetch(query); 
+    
+    const categoryMap = {};
+    products.forEach(product => {
+      product.categories.forEach(category => {
+        if (!categoryMap[category]) {
+          categoryMap[category] = product; // Set the first product for this category
+        }
+      });
+    });
+    setCategories(categoryMap); // Store categories in context
+  };
+
+  fetchCategories();
+
 
   useEffect(() => {
     // Set text direction based on the selected language
@@ -23,27 +69,10 @@ export const StateContext = ({ children }) => {
 
   // Function to AddToCart
   const onAdd = (product, quantity, selectedColor = null) => {
-   
     const checkProductInCart = cartItems.find(
       (item) => item._id === product._id
     );
-    if (checkProductInCart) {
-      var enough = true;
-      cartItems.map((cartProduct) => {
-        if (cartProduct._id === product._id){
-          if (cartProduct.old_quantity < cartProduct.quantity + quantity){
-            enough = false;
-            }
-        }
-    }
-
-      );
-
-      if (!enough){
-        alert(translations[language].soldOut.replace('${item.name}',checkProductInCart.name));
-        return ;
-      }
-    }
+  
     setTotalPrice(
       (prevTotalPrice) => prevTotalPrice + product.price * quantity
     );
@@ -64,7 +93,6 @@ export const StateContext = ({ children }) => {
       setCartItems(updatedCartItems);
     } else {
       // Add new product to cart
-      product.old_quantity = product.quantity;
       product.quantity = quantity;
       product.color = selectedColor; // Store the selected color
       setCartItems([...cartItems, { ...product }]);
@@ -95,15 +123,6 @@ export const StateContext = ({ children }) => {
     const newCartItems = cartItems.filter((item) => item._id !== id);
 
     if (value === 'inc') {
-      var enough = true;
-
-        if (foundProduct.old_quantity < foundProduct.quantity + 1){
-          enough = false;
-          }
-      if (!enough){
-        alert(translations[language].soldOut.replace('${item.name}',foundProduct.name));
-        return ;
-      }
       setCartItems([
         ...newCartItems,
         { ...foundProduct, quantity: foundProduct.quantity + 1 },
@@ -170,6 +189,10 @@ export const StateContext = ({ children }) => {
         clearCart, // Added clearCart function
         language, // Added language to context
         changeLanguage, // Added function to change language
+        categories, // Added categories to context
+        expanded, // Added expanded to context
+        toggleExpand, // Added function to toggle categories expansion
+        fetchCategories
       }}
     >
       {children}
