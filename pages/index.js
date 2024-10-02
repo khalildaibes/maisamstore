@@ -10,17 +10,14 @@ const Home = ({ products, bannerData, brands }) => {
   const { language } = useStateContext(); // Assuming language is managed in context
   const [selectedCategory, setSelectedCategory] = useState('all'); // State to track the selected category
 
-  const uniqueBrands = [...new Set(products.map((product) => product.brand))];
 
   // Step 1: Extract all unique categories
-  var allCategories = [...new Set(products.flatMap((product) => product.categories))];
-  allCategories = allCategories.filter(category => category !== 'best seller');
 
-  // Step 2: Filter products based on the selected category
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
-    : products.filter((product) => product.categories.trim().includes(selectedCategory.trim()));
-    const displayedProducts = new Set();
+  // // Step 2: Filter products based on the selected category
+  // const filteredProducts = selectedCategory === 'all' 
+  //   ? products 
+  //   : products.filter((product) => product.categories.trim().includes(selectedCategory.trim()));
+  //   const displayedProducts = new Set();
 
 
     const maisamMakeupBrand = brands.find((brand) => brand.name === "Maisam Makeup");
@@ -60,12 +57,11 @@ const Home = ({ products, bannerData, brands }) => {
         </div>
       </div>
 
-
+{/* 
       <div className='products-heading'>
         <h2>{translations[language].bestSellingProducts}</h2>
         <p>{translations[language].makeupAndCosmetics}</p>
       </div>
-      {/* Category Buttons */}
 
       <div className="category-buttons">
       <FaFilter className="filter-icon" />
@@ -85,27 +81,24 @@ const Home = ({ products, bannerData, brands }) => {
             {category}
           </button>:null
         ))}
-      </div>
+      </div> */}
 
     
       
-      <div key="BEST SELLERS" className='category-section'>
+      {/* <div key="BEST SELLERS" className='category-section'>
         <h3 className='category-title'>{translations[language].exploreProducts}</h3>
         <div className='products-container'>
           {filteredProducts.map((product) => (
             <Product key={product._id} product={product} />
           ))}
         </div>
-      </div>
+      </div> */}
       
       {/* About Us Section */}
       <div className='aboutSection'>
         <h2>{translations[language].aboutUs}</h2>
         <p>{translations[language].aboutUsDescription}</p>
         <div className='aboutImages'>
-          <img src="/makeup1.jpg" alt="Makeup Products" />
-          <img src="/makeup2.jpg" alt="Makeup Application" />
-          <img src="/makeup3.jpg" alt="Makeup Kit" />
         </div>
       </div>
 
@@ -126,7 +119,7 @@ const Home = ({ products, bannerData, brands }) => {
       
     
       {/* Render products grouped by their categories, excluding duplicates and those with same name as brand */}
-      <div className='categories-container'>
+      {/* <div className='categories-container'>
         {allCategories
           .filter((category) => !brands.some((brand) => brand.name === category)) // Exclude categories that match brand names
           .map((category) => {
@@ -152,7 +145,7 @@ const Home = ({ products, bannerData, brands }) => {
             </div>
           );
         })}
-      </div>
+      </div> */}
       {/* Why Buy From Us Section */}
       <div className='whyBuySection'>
         <h2>{translations[language].whyBuyFromUs}</h2>
@@ -170,8 +163,8 @@ const Home = ({ products, bannerData, brands }) => {
 
 // Fetch data from Sanity
 export const getServerSideProps = async () => {
-  const query = '*[_type == "product"]';
-  const products = await client.fetch(query);
+  // const query = '*[_type == "product"]';
+  // const products = await client.fetch(query);
 
   const bannerQuery = '*[_type == "banner"]';
   const bannerData = await client.fetch(bannerQuery);
@@ -179,7 +172,9 @@ export const getServerSideProps = async () => {
   const brands = await client.fetch(brandsQuery);
 
   return {
-    props: { products, bannerData, brands }
+    props: {
+      //  products, 
+       bannerData, brands }
   };
 };
 
