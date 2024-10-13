@@ -1,11 +1,11 @@
 {
   "root": true,
   "api": {
-    "projectId": "--NEXT_PUBLIC_SANITY_PROJECT_ID--",
-    "dataset": "--NEXT_PUBLIC_SANITY_DATASET--"
+    "projectId": "NEXT_PUBLIC_SANITY_PROJECT_ID_PLACEHOLDER",
+    "dataset": "NEXT_PUBLIC_SANITY_DATASET_PLACEHOLDER"
   },
   "project": {
-    "name": "--CLIENT_BUSINESS_NAME--"
+    "name": "CLIENT_BUSINESS_NAME_PLACEHOLDER"
   },
   "plugins": [
     "@sanity/base",
