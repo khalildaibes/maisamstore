@@ -1,11 +1,11 @@
 {
   "root": true,
   "api": {
-    "projectId": "next_public_sanity_project_id_placeholder",
-    "dataset": "next_public_sanity_dataset_placeholder"
+    "projectId": "qskg7t5g",
+    "dataset": "prod"
   },
   "project": {
-    "name": "client_business_name_placeholder"
+    "name": "Khalil_website_builder"
   },
   "plugins": [
     "@sanity/base",
