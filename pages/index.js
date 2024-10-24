@@ -44,7 +44,6 @@ const Home = ({ products, bannerData, brands }) => {
     const sephora = brands.find((brand) => brand.name === "SEPHORA");
     return (
     <>
-      <HeroBanner heroBanner={bannerData.length && bannerData[0]} />
 
  <div className='products-heading'>
         <h2>{translations[language].brands}</h2>
@@ -65,7 +64,7 @@ const Home = ({ products, bannerData, brands }) => {
             </div>
             </Link> */}
               
-          {brands.filter((brand)=> brand.name!="Maisam Makeup" && brand.name!="SEPHORA" ).map((brand) => (
+          {brands.map((brand) => (
              <Link  key={`Link_${brand._id}}`} href={`/catgeory_products?categoryName=${brand.name}`}> 
             
             <div key={brand._id} className="brand-item">
@@ -117,19 +116,6 @@ const Home = ({ products, bannerData, brands }) => {
           {translations[language].allCategories}
         </button>
 
-        {allCategories.map((category) => (
-          category!=" " && category!=""&& !brands.some((brand)=>brand.name.trim() === category.trim()) 
-          ?
-          <button 
-            key={category}
-            className={`category-button ${selectedCategory === category ? 'active' : ''}`}
-            onClick={() => setSelectedCategory(category)}
-          >
-            {category}
-          </button>
-          :
-          null
-        ))}
       </div>
 
     
@@ -170,34 +156,6 @@ const Home = ({ products, bannerData, brands }) => {
         </div>
       </div>
       
-    
-      {/* Render products grouped by their categories, excluding duplicates and those with same name as brand */}
-      <div className='categories-container'>
-        {allCategories
-          .filter((category) => !brands.some((brand) => brand.name.trim() === category.trim())) // Exclude categories that match brand names
-          .map((category) => {
-          const categoryProducts = products
-            .filter((product) => !displayedProducts.has(product._id)); // Exclude already displayed products
-
-          // Add products to displayed list
-          categoryProducts.forEach(product => displayedProducts.add(product._id));
-
-          if (categoryProducts.length === 0) {
-            return null; // Skip categories with no products to show
-          }
-
-          return (
-            <div key={category} className='category-section'>
-              <h3 className='category-title'>{category}</h3>
-              <div className='products-container'>
-                {categoryProducts.map((product) => (
-                  <Product key={product._id} product={product} />
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
       {/* Why Buy From Us Section */}
       <div className='whyBuySection'>
         <h2>{translations[language].whyBuyFromUs}</h2>
