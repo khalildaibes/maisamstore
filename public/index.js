@@ -1,34 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { client } from '../lib/client';
 import { useStateContext } from '../context/StateContext';
-import { Product, FooterBanner, HeroBanner ,Popup} from '../components'; 
+import { Product, FooterBanner, } from '../components'; 
 import translations from '../translations/translations'; // Import translations
-import Customer from '../assets/customer-support-stroke-rounded.svg'; // Adjust the path if needed
-import Location from '../assets/location-01-stroke-rounded.svg'; // Adjust the path if needed
-import Security from '../assets/security-check-stroke-rounded.svg'; // Adjust the path if needed
 import Truck from '../assets/customer-support-stroke-rounded.svg'; // Adjust the path if needed
-import dynamic from 'next/dynamic';
 const Home = ({ products, bannerData }) => {
   const { language } = useStateContext();
-  const [showPopup, setShowPopup] = useState(false);
 
   // Check if it's the user's first visit and show the popup
   useEffect(() => {
     const isFirstVisit = localStorage.getItem('firstVisit') === null;
     if (isFirstVisit) {
-      setShowPopup(true);
       localStorage.setItem('firstVisit', 'no');
     }
   }, []);
 
-  const closePopup = () => {
-    setShowPopup(false);
-  };
- 
   return (
     <> 
-      {showPopup && <Popup onClose={closePopup} />} {/* Render the popup if showPopup is true */}
-      <HeroBanner heroBanner={bannerData.length && bannerData[0]} />   
+
 
 
       

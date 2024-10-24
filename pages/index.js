@@ -9,7 +9,6 @@ import { FaFilter } from 'react-icons/fa'; // Import the filter icon from react-
 const Home = ({ products, bannerData, brands }) => {
   const { language, categories, expanded, toggleExpand, fetchCategories } = useStateContext();
 
-  const [showPopup, setShowPopup] = useState(false);
   const [visibleCategories, setVisibleCategories] = useState([]);
 
   useEffect(() => {
@@ -24,9 +23,6 @@ const Home = ({ products, bannerData, brands }) => {
     }
   }, [categories, expanded]);
 
-  const closePopup = () => {
-    setShowPopup(false);
-  };
 
 
   const [selectedCategory, setSelectedCategory] = useState('all'); // State to track the selected category
@@ -55,7 +51,6 @@ const Home = ({ products, bannerData, brands }) => {
         <p>{translations[language].brandsDescription}</p>
       </div>
       <div className="wrapper">
-    {showPopup && <Popup onClose={closePopup} />} 
   </div>
       {/* Brands Section */}
       <div className="brands-section">
