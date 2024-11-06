@@ -4,6 +4,7 @@ import { urlFor, client } from "../lib/client";
 import translations from '../translations/translations'; // Import translations
 import emailjs from 'emailjs-com';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid to generate unique keys
+import { addStrapiData, fetchStrapiData } from './lib/strapiclient';
 
 const SubmitOrder = (products, bannerData, brands) => {
   const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
@@ -177,9 +178,21 @@ const SubmitOrder = (products, bannerData, brands) => {
     };
 
     try {
+        if (process.env.STRAPI_CLIENT)
+          {
+            
+            try {
+              const addedProduct = await addStrapiData('/products', newProduct);
+              console.log('Product added:', addedProduct);
+            } catch (error) {
+              console.error('Failed to add product:', error);
+            }
+          }
       // Save the order data to Sanity
-      await client.create(orderData);
-    } catch (error) {
+        else{
+          await client.create(orderData);
+        }
+      } catch (error) {
       console.error('Error saving order to Sanity:', error);
       alert('Failed to save order. Please try again.');
     }
