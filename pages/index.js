@@ -85,10 +85,10 @@ const Home = ({ products, bannerData, brands }) => {
 
 // Fetch data from Sanity or Strapi
 export const getServerSideProps = async () => {
-  if (process.env.STRAPI_CLIENT === 'false') {
+  if (process.env.STRAPI_CLIENT === 'true') {
     // Fetch data from Strapi using helper function
     try {
-      const productsData = await fetchStrapiData('/products', { 'pagination[pageSize]': 100, 'populate': '*' });
+      const productsData = await fetchStrapiData('/products', { 'populate': '*' });
       const bannerData = await fetchStrapiData('/banners', { 'pagination[pageSize]': 100, 'populate': '*' });
       const brandsData = await fetchStrapiData('/brands', { 'pagination[pageSize]': 100, 'populate': '*' });
 
