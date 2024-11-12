@@ -9,7 +9,7 @@ import {
 import { TiDeleteOutline } from "react-icons/ti";
 import { toast } from "react-hot-toast";
 import { useStateContext } from "../context/StateContext";
-import { urlFor } from "../lib/client";
+import { fetchStrapiData, getImageUrl } from '../lib/strapiClient';
 import getStripe from "../lib/getStripe";
 import translations from '../translations/translations'; // Import translations
 
@@ -81,7 +81,7 @@ const Cart = () => {
             cartItems.map((item) => (
               <div className="product" key={item._id}>
                 <img
-                  src={urlFor(item?.image[0])}
+                  src={getImageUrl(item?.image[0])}
                   className="cart-product-image"
                 />
                 <div className="item-desc">

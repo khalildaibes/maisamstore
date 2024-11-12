@@ -6,25 +6,24 @@ import {
   AiOutlineStar,
   AiOutlineClose,
 } from "react-icons/ai";
-import { client, urlFor, getUrlFromId } from "../../lib/client";
+import { client as sanityClient, urlFor } from "../../lib/client";
 import { Product } from "../../components";
 import { useStateContext } from '../../context/StateContext'; 
 import translations from '../../translations/translations';
 import { useRouter } from 'next/router';
-
-function videoAssetFor(source) {
-  return getFileAsset(source, client.config());
-}
+import { fetchStrapiData, getImageUrl } from '../../lib/strapiClient';
 
 const ProductDetails = ({ productData, products }) => {
   const { image, name, details, price, colors, video } = productData;
   let { decQty, incQty, qty, onAdd, setShowCart, language } = useStateContext();
-  const [product, setProduct] = useState(productData); // State to hold product data
+  const [product, setProduct] = useState(productData[0]); // State to hold product data
   const [index, setIndex] = useState(0);
   const [isVideoSelected, setIsVideoSelected] = useState(false);
   const [selectedVideoIndex, setSelectedVideoIndex] = useState(0);
   const [selectedColor, setSelectedColor] = useState(null);
   const router = useRouter();
+
+  const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
 
   const handleColorClick = (color) => {
     if (color.quantity > 0) {
@@ -68,73 +67,61 @@ const ProductDetails = ({ productData, products }) => {
     }
   };
 
-  // Function to fetch product data
-  const fetchProductData = async () => {
-    console.log("data updated");
-    const query = `*[_type == "product" && _id == '${product._id}'][0]`; // Adjust query to fetch the product by ID
-    const updatedProduct = await client.fetch(query);
-    setProduct(updatedProduct);
-    qty = updatedProduct.quantity;
-  };
-
   // useEffect to poll the product data every few seconds
   useEffect(() => {
-    const interval = setInterval(fetchProductData, 5000); // Fetch every 5 seconds
+    // const interval = setInterval(async () => {
+    //   const updatedProduct = await fetchProductData();
+    //   setProduct(updatedProduct);
+    // }, 5000);
 
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, []);
+  console.log("productData is ", productData)
 
   return (
     <div>
       <div className="product-detail-container">
         <div>
           <div className="image-container">
-            {/* Conditional rendering to either show the image or the video */}
-            {!isVideoSelected ? (
+            {/* {!isVideoSelected ? (
               <img
-                src={urlFor(product.image && product.image[index])}
+                src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + product.image[0] : urlFor(product.image && product.image[index])}
                 className="product-detail-image"
                 alt={product.name}
               />
             ) : (
               <video className="product-detail-image" controls>
-                <source src={getUrlFromId(product.video[selectedVideoIndex].videoFile)} type="video/mp4" />
+                <source src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + product.video[selectedVideoIndex].url : urlFor(product.video[selectedVideoIndex])} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-            )}
+            )
+            } */}
           </div>
 
           <div className="small-images-container">
-            {/* Map through the images */}
             {product.image?.map((item, i) => (
               <img
                 key={i}
-                src={urlFor(item)}
+                src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + item.url : getImageUrl(item)}
                 className={i === index && !isVideoSelected ? 'small-image selected-image' : 'small-image'}
                 onClick={() => { setIndex(i); setIsVideoSelected(false); }}
                 alt={`Product image ${i + 1}`}
               />
             ))}
 
-            {/* Map through the videos */}
-            {product.video?.map((videoUrl, i) => (
+            {/* {product.video?.map((videoUrl, i) => (
               <div
                 key={i}
                 className={isVideoSelected && i === selectedVideoIndex ? 'small-image selected-image' : 'small-image'}
-                onClick={(e) => { 
-                  e.preventDefault();  // Prevent default behavior
-                  setIsVideoSelected(true); 
-                  setSelectedVideoIndex(i); 
-                }}
+                onClick={() => { setIsVideoSelected(true); setSelectedVideoIndex(i); }}
               >
                 <img
-                  className={i === index && !isVideoSelected ? 'small-image selected-image' : 'small-image'}
-                  src={urlFor(product.video[selectedVideoIndex].thumbnail)}
+                  src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + product.video[i].thumbnail.url : urlFor(product.video[i].thumbnail)}
                   alt={product.name}
+                  className="small-image"
                 />
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
 
@@ -153,41 +140,6 @@ const ProductDetails = ({ productData, products }) => {
           <h4>{translations[language].details}</h4>
           <p>{product.details}</p>
           <p className="price">₪ {product.price}</p>
-
-          <div className="product-colors">
-            {product.colors && product.colors.map((item, index) => (
-              <div
-                key={index}
-                className={`color-circle ${item.quantity === 0 ? 'disabled' : ''}`}
-                style={{ backgroundColor: item.name, position: 'relative' }}
-                title={item.name}
-                onClick={() => handleColorClick(item)}
-              >
-                {item.quantity === 0 && (
-                  <AiOutlineClose
-                    style={{
-                      color: 'red',
-                      position: 'absolute',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      fontSize: '1.5rem',
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-            {selectedColor && (
-              <p>
-                {translations[language].selectedColor}
-                <div
-                  className="color-circle"
-                  style={{ backgroundColor: selectedColor.name }}
-                  title={selectedColor.name}
-                />
-              </p>
-            )}
-          </div>
 
           <div className="quantity">
             <h3>{translations[language].quantity}</h3>
@@ -208,34 +160,37 @@ const ProductDetails = ({ productData, products }) => {
           </div>
         </div>
       </div>
-
-      <div className="maylike-products-wrapper">
-        <h2>{translations[language].youMayAlsoLike}</h2>
-        <div className="marquee">
-          <div className="maylike-products-container track">
-            {products.map((item) => (
-              item.quantity > 0 ? 
-              <Product key={item._id} product={item} /> : null
-            ))}
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
 
-// Replace getStaticPaths and getStaticProps with getServerSideProps
 export const getServerSideProps = async ({ params }) => {
   const { slug } = params;
-  const query = `*[_type == "product" && slug.current == '${slug}'][0]`;
-  const productsQuery = '*[_type == "product"]';
 
-  const productData = await client.fetch(query);
-  const products = await client.fetch(productsQuery);
+  if (process.env.STRAPI_CLIENT === 'true') {
+    try {
+      const productData = await fetchStrapiData(`/products`, { filters: { slug: { $eq: slug } }, populate: '*' });
+      const products = await fetchStrapiData(`/products`, { pagination: { pageSize: 100 }, populate: '*' });
 
-  return {
-    props: { productData, products },
-  };
+      return {
+        props: { productData: productData.data, products: products.data },
+      };
+    } catch (error) {
+      console.error('Error fetching data from Strapi:', error);
+      return {
+        props: { productData: null, products: [] },
+      };
+    }
+  } else {
+    const productQuery = `*[_type == "product" && slug.current == '${slug}'][0]`;
+    const productsQuery = '*[_type == "product"]';
+    const productData = await sanityClient.fetch(productQuery);
+    const products = await sanityClient.fetch(productsQuery);
+
+    return {
+      props: { productData, products },
+    };
+  }
 };
 
 export default ProductDetails;

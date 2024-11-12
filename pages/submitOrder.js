@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useStateContext } from "../context/StateContext";
-import { urlFor, client } from "../lib/client";
-import translations from '../translations/translations'; // Import translations
+import { urlFor, client as sanityClient } from "../lib/client";
+import { fetchStrapiData, getImageUrl, strapiClient, addStrapiData } from "../lib/strapiClient"; // Import Strapi helpers
+import translations from '../translations/translations';
 import emailjs from 'emailjs-com';
-import { v4 as uuidv4 } from 'uuid'; // Import uuid to generate unique keys
-
-const SubmitOrder = (products, bannerData, brands) => {
-  const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext(); // Get language from context
+import { v4 as uuidv4 } from 'uuid';
+const SubmitOrder = ({ products, bannerData, brands }) => {
+  const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext();
 
   const [orderDetails, setOrderDetails] = useState({
     phoneNumber: "",
-    retypephoneNumber: "", // New field for retype password
+    retypephoneNumber: "",
     name: "",
     addressType: "",
     address: "",
@@ -18,14 +18,12 @@ const SubmitOrder = (products, bannerData, brands) => {
     city: "",
     paymentMethod: "",
     notes: "",
-    subtotal: "",
-    cart: "",
   });
 
-  const [deliveryFee, setDeliveryFee] = useState(0); // State to track delivery fee
+  const [deliveryFee, setDeliveryFee] = useState(0);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const isStrapiClient = true;
 
-  // Function to calculate the delivery fee based on addressType
   const calculateDeliveryFee = (addressType) => {
     if (addressType === "ARAB_48") {
       return 35;
@@ -35,7 +33,6 @@ const SubmitOrder = (products, bannerData, brands) => {
     return 0;
   };
 
-  // useEffect to recalculate delivery fee when addressType changes
   useEffect(() => {
     const fee = calculateDeliveryFee(orderDetails.addressType);
     setDeliveryFee(fee);
@@ -44,119 +41,72 @@ const SubmitOrder = (products, bannerData, brands) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     orderDetails.address = `${orderDetails.city}, ${orderDetails.street}`;
-
+  
     // Validate form fields
     if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
       alert('Please fill out all required fields.');
       return;
     }
+  
     const phoneNumberRegex = /^05\d{8}$/;
     if (!phoneNumberRegex.test(orderDetails.phoneNumber)) {
       alert('Please enter a valid phone number starting with "05" and exactly 10 digits.');
       return;
     }
-    
-    // Validate retype password
+  
     if (orderDetails.retypephoneNumber !== orderDetails.phoneNumber) {
       alert('Retyped phone number must match the phone number.');
       return;
     }
-
-    // Show confirmation dialog before proceeding
+  
     if (!window.confirm('Are you sure you want to submit the order?')) {
       return;
     }
-
-    // Continue with the order submission
-    var status = await checkStorage();
+  
+    // Check storage status
+    const status = await checkStorage();
     if (status) {
-      addOrder(event);
-      cartItems.map(item => {
-        client
-        .patch(item._id) // Document ID to patch
-        .set({"quantity": products.products.find((product)=> product._id === item._id)?.quantity - item.quantity }) // Shallow merge
-        .commit() // Perform the patch and return a promise
-        .then((item) => {
-          console.log('document updated! New orer:')
-          console.log(item)
-        })
-        .catch((err) => {
-          console.error('Oh no, the update failed: ', err.message)
-        })});
-      sendEmail(event);
+      // Add order to database
+      await addOrder();
+      // TODO: chnage email sending  mechanisoim
+      // sendEmail();
       setOrderSubmitted(true);
-      // createOrderEntregas({ orderdetailes: orderDetails })
+    }
+    else{
+      console.log("what ?")
     }
   };
 
-  const decreaseFromDB = async (cartItems) => {
-
- 
-  };
-
-  // Clear the form after sending
-  
-  const sendEmail = (e) => {
-    e.preventDefault();
+  const sendEmail = () => {
     orderDetails.subtotal = totalWithDelivery;
-    var  message= {
-      "to_name":"khalilok",
-      "from_name":"new order",
-      "totalWithDelivery":totalWithDelivery,
-      "buyername":orderDetails.name,
-      "message" :(cartItems.map(item => `
+    const message = {
+      "to_name": "khalilok",
+      "from_name": "new order",
+      "totalWithDelivery": totalWithDelivery,
+      "buyername": orderDetails.name,
+      "message": cartItems.map(item => `
         product: ${item.name} 
         quantity: ${item.quantity}
-        `).join("                         ") + "   "  + JSON.stringify(orderDetails, null, 2) )
-    }
-
-  
+        `).join("                         ") + "   " + JSON.stringify(orderDetails, null, 2),
+    };
 
     emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
-        alert('תודה רבה לכם על הקנייה!');
+        alert('Thank you for your purchase!');
       }, (error) => {
         console.error('FAILED...', error);
-        alert('opps we didnt complete the purchase.');
+        alert('Oops, we did not complete the purchase.');
       });
-
-    // Clear the form after sending
-
   };
 
-  const createOrderEntregas = async (orderDetails) => {
-    try {
-      // Make the POST request to the Next.js API route, passing the order details
-      const response = await fetch('/api/delivery', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderDetails) // Send order details from the client
-      });
-  
-      const result = await response.json();
-  
-      // Check if the response was successful
-      if (response.ok) {
-        console.log('Order created successfully:', result);
-        // Handle success (e.g., clear form fields, redirect, etc.)
-      } else {
-        console.error('Error creating order:', result);
-        // Handle error response
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      // Handle network or other errors
-    }
-  };
 
-  const addOrder = async (event) => {
-    // Prepare the order data to be saved in Sanity
+  
+  const addOrder = async () => {
+    // const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
+    const isStrapiClient = true;
     const orderData = {
-      _type: 'orderDetails',
-      status: 'Pending', // Set initial status
+      status: 'Pending',
       cost: totalWithDelivery,
       phoneNumber: orderDetails.phoneNumber,
       name: orderDetails.name,
@@ -168,48 +118,75 @@ const SubmitOrder = (products, bannerData, brands) => {
       notes: orderDetails.notes || '',
       subtotal: totalPrice,
       cart: cartItems.map(item => ({
-        _type: 'cartItem',
         productName: item.name,
         quantity: item.quantity,
         price: item.price,
-        _key: uuidv4(), // Generate a unique key
+        _key: uuidv4(),
       })),
     };
-
+  
     try {
-      // Save the order data to Sanity
-      await client.create(orderData);
+      if (isStrapiClient) {
+        // Create the order in Strapi
+        const response = await addStrapiData('/Orderdetailss',  orderData);
+        console.log('Order saved to Strapi:', response.data);
+      } else {
+        // Create the order in Sanity
+        await sanityClient.create({
+          _type: 'orderDetails',
+          ...orderData,
+        });
+        console.log('Order saved to Sanity');
+      }
     } catch (error) {
-      console.error('Error saving order to Sanity:', error);
+      console.error('Error saving order:', error);
       alert('Failed to save order. Please try again.');
     }
   };
+  
+  const checkStorage = async () => {
+    let status = true;
+    const isStrapiClient = true;
+    console.log("process.env.STRAPI_CLIENT", process.env.STRAPI_CLIENT === "true")
 
-  const checkStorage = async (event) => {
-    var status = true;
-
-    // Use Promise.all to wait for all asynchronous operations to complete
     await Promise.all(
       cartItems.map(async (item) => {
-        const product = await client
-          .fetch(`*[_type == "product"  &&  _id == "${item._id}"]`) // Fetch the product's quantity
-          .then(result => result[0]); // Access the first result
-        if (!product.quantity > 0) {
-          alert(translations[language].soldOut.replace('${item.name}', item.name));
-          status = false;
+        let product;
+        console.log("tryong to buy", item)
+  
+        if (isStrapiClient) {
+          // Fetch product data from Strapi
+          try {
+            const productData = await fetchStrapiData(`/products`, {
+              filters: { documentId: { $eq: item.documentId } },
+              populate: '*',
+            });
+            product = productData.data; // Assuming Strapi's response structure
+          } catch (error) {
+            console.error('Error fetching product from Strapi:', error);
+          }
+        } else {
+
+          // Fetch product data from Sanity
+          try {
+            product = await sanityClient
+              .fetch(`*[_type == "product" && _id == "${item._id}"]`)
+              .then(result => result[0]);
+          } catch (error) {
+            console.error('Error fetching product from Sanity:', error);
+          }
         }
-        if (product.quantity < item.quantity) {
-          alert(translations[language].soldOut.replace('${item.name}', item.name));
-          status = false;
-        }
-        if (product.quantity - item.quantity < 0) {
+  
+        if (!product || product.quantity < item.quantity) {
           alert(translations[language].soldOut.replace('${item.name}', item.name));
           status = false;
         }
       })
     );
+  
     return status;
   };
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -324,15 +301,15 @@ const SubmitOrder = (products, bannerData, brands) => {
               </button>
             </div>
           </form>
-
+          {/* Order Summary */}
           <div className="order-summary">
             <h3>{translations[language].yourCart}</h3>
             <div className="product-container">
               {cartItems.map((item) => (
-                <div className="product" key={item._id}>
+                <div className="product" key={item._id || item.id}>
                   <img
-                    src={urlFor(item?.image[0])}
-                    alt=""
+                    src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + item.image[0].url : getImageUrl(item.image[0])}
+                    alt={item.name}
                     className="cart-product-image"
                   />
                   <div className="item-desc">
@@ -348,7 +325,7 @@ const SubmitOrder = (products, bannerData, brands) => {
               ))}
             </div>
             <div className="total">
-              <h3>{translations[language].deliveryFee}: ₪ {calculateDeliveryFee(orderDetails.addressType)}</h3>
+              <h3>{translations[language].deliveryFee}: ₪ {deliveryFee}</h3>
               <h3>{translations[language].totalItems} {totalQuantities}</h3>
               <h3>{translations[language].subtotal}: ₪ {totalWithDelivery}</h3>
             </div>
@@ -370,11 +347,11 @@ const SubmitOrder = (products, bannerData, brands) => {
           <div className="product-container">
             {cartItems.map((item) => (
               <div className="product" key={item._id}>
-                <img
-                  src={urlFor(item?.image[0])}
-                  alt=""
-                  className="cart-product-image"
-                />
+              <img
+                    src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + item.image[0].url : getImageUrl(item.image[0])}
+                    alt={item.name}
+                    className="cart-product-image"
+                  />
                 <div className="item-desc">
                   <div className="flex top">
                     <h5>{item.name}</h5>
@@ -399,19 +376,58 @@ const SubmitOrder = (products, bannerData, brands) => {
   );
 };
 
-// Fetch data from Sanity
+// Fetch data for Strapi or Sanity based on environment variable
 export const getServerSideProps = async () => {
-  const query = '*[_type == "product"]';
-  const products = await client.fetch(query);
+  if (process.env.STRAPI_CLIENT === 'true') {
+    try {
+      const productsData = await fetchStrapiData('/products', { 'pagination[pageSize]': 100, 'populate': '*' });
+      const bannerData = await fetchStrapiData('/banners', { 'pagination[pageSize]': 100, 'populate': '*' });
+      const brandsData = await fetchStrapiData('/brands', { 'pagination[pageSize]': 100, 'populate': '*' });
 
-  const bannerQuery = '*[_type == "banner"]';
-  const bannerData = await client.fetch(bannerQuery);
-  const brandsQuery = '*[_type == "brand"]'; // Fetch brands from "brand" schema
-  const brands = await client.fetch(brandsQuery);
+      return {
+        props: {
+          products: productsData.data,
+          bannerData: bannerData.data,
+          brands: brandsData.data,
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching data from Strapi:', error);
+      return {
+        props: {
+          products: [],
+          bannerData: [],
+          brands: [],
+        },
+      };
+    }
+  } else {
+    try {
+      const bannerQuery = '*[_type == "banner"]';
+      const bannerData = await sanityClient.fetch(bannerQuery);
+      const brandsQuery = '*[_type == "brand"]';
+      const brands = await sanityClient.fetch(brandsQuery);
+      const productsQuery = '*[_type == "product"]';
+      const products = await sanityClient.fetch(productsQuery);
 
-  return {
-    props: { products, bannerData, brands }
-  };
+      return {
+        props: {
+          products,
+          bannerData,
+          brands,
+        },
+      };
+    } catch (error) {
+      console.error('Error fetching data from Sanity:', error);
+      return {
+        props: {
+          products: [],
+          bannerData: [],
+          brands: [],
+        },
+      };
+    }
+  }
 };
 
 export default SubmitOrder;

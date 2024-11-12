@@ -1,26 +1,47 @@
 import React from 'react';
-import { client } from '../lib/client';
-import {Dashboard} from '../components';
-
+import { client as sanityClient } from '../lib/client';
+import { strapiClient } from '../lib/strapiClient'; // Import Strapi client
+import { Dashboard } from '../components';
 
 const Dashboards = ({ orders }) => {
-
-
   return (
-    <div >
-        <Dashboard orders={orders} />
+    <div>
+      <Dashboard orders={orders} />
     </div>
   );
 };
 
-// Fetch data based on the brand query parameter
-export const getStaticProps = async (context) => {
+// Fetch data for Strapi or Sanity based on environment variable
+export const getStaticProps = async () => {
+  const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
+  let orders = [];
 
-  const ordersQuery = '*[_type == "orders"]'; // Fetch brands from "brand" schema
-  const orders = await client.fetch(ordersQuery);
+  if (isStrapiClient) {
+    try {
+      // Fetch orders from Strapi
+      const response = await strapiClient.get('/orders', {
+        params: { 'pagination[pageSize]': 100, 'populate': '*' },
+      });
+      orders = response.data.data.map((order) => ({
+        id: order.id,
+        ...order.attributes, // Adjust to the structure of your Strapi API response
+      }));
+    } catch (error) {
+      console.error('Error fetching orders from Strapi:', error);
+    }
+  } else {
+    try {
+      // Fetch orders from Sanity
+      const ordersQuery = '*[_type == "orders"]';
+      orders = await sanityClient.fetch(ordersQuery);
+    } catch (error) {
+      console.error('Error fetching orders from Sanity:', error);
+    }
+  }
 
   return {
-    props: { orders }
+    props: { orders },
+    revalidate: 10, // Optionally set revalidation time
   };
 };
 

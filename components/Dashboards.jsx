@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { client } from '../lib/client';
+import { client as sanityClient } from '../lib/client';
+import { strapiClient, addStrapiData, fetchStrapiData } from '../lib/strapiClient'; // Import Strapi client
 import { v4 as uuidv4 } from 'uuid'; // Import uuid to generate unique keys
 
 const Dashboard = () => {
@@ -8,61 +9,74 @@ const Dashboard = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [statusFilter, setStatusFilter] = useState(''); // New state for status filter
+  // const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
+  const isStrapiClient = true;
 
   // Fetch orders when the component mounts
   useEffect(() => {
     const fetchOrders = async () => {
-      const query = `
-        *[_type == "orderDetails"]{
-          _id,
-          phoneNumber,
-          name,
-          address,
-          paymentMethod,
-          subtotal,
-          cart,
-          status, // Include the status field
-          _createdAt
-        } | order(_createdAt desc)
-      `;
-      const ordersData = await client.fetch(query);
-      setOrders(ordersData);
-      setFilteredOrders(ordersData); // Initially, show all orders
+      if (isStrapiClient) {
+        try {
+          const response = await fetchStrapiData('/Orderdetailss', { 'pagination[pageSize]': 100, 'populate': '*' });
+          const ordersData = response.data;
+          setOrders(ordersData);
+          setFilteredOrders(ordersData);
+        } catch (error) {
+          console.error('Error fetching Orderdetailss from Strapi:', error);
+        }
+      } else {
+        try {
+          const query = `
+            *[_type == "orderDetails"]{
+              _id,
+              phoneNumber,
+              name,
+              address,
+              paymentMethod,
+              subtotal,
+              cart,
+              status,
+              _createdAt
+            } | order(_createdAt desc)
+          `;
+          const ordersData = await sanityClient.fetch(query);
+          setOrders(ordersData);
+          setFilteredOrders(ordersData);
+        } catch (error) {
+          console.error('Error fetching orders from Sanity:', error);
+        }
+      }
     };
 
     fetchOrders();
-  }, []);
+  }, [isStrapiClient]);
 
   const filterByDateAndStatus = () => {
     const filtered = orders.filter((order) => {
-      const orderDate = new Date(order._createdAt);
-      
-      // Normalize the orderDate to ignore time
+      const orderDate = new Date(order._createdAt || order.createdAt);
       const normalizedOrderDate = new Date(orderDate);
       normalizedOrderDate.setHours(0, 0, 0, 0);
-  
-      // Normalize startDate and endDate to ignore time
+
       const normalizedStartDate = startDate ? new Date(startDate) : null;
       if (normalizedStartDate) {
         normalizedStartDate.setHours(0, 0, 0, 0);
       }
-  
+
       const normalizedEndDate = endDate ? new Date(endDate) : null;
       if (normalizedEndDate) {
-        normalizedEndDate.setHours(23, 59, 59, 999); // Include the entire end date
+        normalizedEndDate.setHours(23, 59, 59, 999);
       }
-  
+
       return (
         (!startDate || normalizedOrderDate >= normalizedStartDate) &&
         (!endDate || normalizedOrderDate <= normalizedEndDate) &&
         (!statusFilter || order.status.toLowerCase() === statusFilter.toLowerCase())
       );
     });
-  
+
     setFilteredOrders(filtered);
   };
 
-  // Get the most sold product
   const getMostSoldProduct = () => {
     const productCounts = {};
 
@@ -84,50 +98,30 @@ const Dashboard = () => {
     return mostSold[0];
   };
 
-  
-
-
-  // Update order status to 'Done'
-  const markAsDone = async (orderId) => {
+  const updateOrderStatus = async (orderId, status) => {
     try {
-      await client.patch(orderId)
-        .set({ status: 'Done' }) // Set status to 'Done'
-        .commit();
+      if (isStrapiClient) {
+        // Update order in Strapi
+        await addStrapiData(`/Orderdetailss/${orderId}`, {
+          data: { status },
+        });
+      } else {
+        // Update order in Sanity
+        await sanityClient.patch(orderId).set({ status }).commit();
+      }
 
       // Update the local state
-      setOrders(orders.map(order => 
-        order._id === orderId ? { ...order, status: 'Done' } : order
+      setOrders(orders.map(order =>
+        (order._id === orderId || order.id === orderId) ? { ...order, status } : order
       ));
-      setFilteredOrders(filteredOrders.map(order => 
-        order._id === orderId ? { ...order, status: 'Done' } : order
+      setFilteredOrders(filteredOrders.map(order =>
+        (order._id === orderId || order.id === orderId) ? { ...order, status } : order
       ));
 
-      alert('Order status updated to Done.');
+      alert(`Order status updated to ${status}.`);
     } catch (error) {
-      console.error('Failed to update order status:', error);
-      alert('Failed to update order status. Please try again.');
-    }
-  };
-
-  // Update order status to 'Shipped'
-  const markAsShipped = async (orderId) => {
-    try {
-      await client.patch(orderId)
-        .set({ status: 'Shipped' }) // Set status to 'Shipped'
-        .commit();
-
-      // Update the local state
-      setOrders(orders.map(order => 
-        order._id === orderId ? { ...order, status: 'Shipped' } : order
-      ));
-      setFilteredOrders(filteredOrders.map(order => 
-        order._id === orderId ? { ...order, status: 'Shipped' } : order
-      ));
-
-      alert('Order status updated to Shipped.');
-    } catch (error) {
-      console.error('Failed to update order status:', error);
-      alert('Failed to update order status. Please try again.');
+      console.error(`Failed to update order status to ${status}:`, error);
+      alert(`Failed to update order status to ${status}. Please try again.`);
     }
   };
 
@@ -180,18 +174,18 @@ const Dashboard = () => {
       <div className="order-details-section">
         <h3>Order Details</h3>
         {filteredOrders.map((order) => (
-          <div className="order-card" key={order._id}>
+          <div className="order-card" key={order._id || order.id}>
             <h4>Order from {order.name}</h4>
             <p>Status: <span className={`order-status ${order.status.toLowerCase()}`}>{order.status}</span></p>
-            <button onClick={() => markAsDone(order._id)} disabled={order.status === 'Done'}>Mark as Done</button> {/* Button to change status */}
-            <button onClick={() => markAsShipped(order._id)} disabled={order.status === 'Shipped' || order.status === 'Done'}>Mark as Shipped</button> {/* Button to change status */}
+            <button onClick={() => updateOrderStatus(order.documentId || order.documentId, 'Done')} disabled={order.status === 'Done'}>Mark as Done</button>
+            <button onClick={() => updateOrderStatus(order.documentId || order.documentId, 'Shipped')} disabled={order.status === 'Shipped' || order.status === 'Done'}>Mark as Shipped</button>
             <p>Subtotal: ₪{order.subtotal}</p>
             <p>Payment Method: {order.paymentMethod}</p>
-            <p>Order Date: {new Date(order._createdAt).toLocaleDateString()}</p>
+            <p>Order Date: {new Date(order._createdAt || order.createdAt).toLocaleDateString()}</p>
             <p>Products:</p>
             <ul>
               {order.cart.map((item, index) => (
-                <li key={index}>
+                <li key={uuidv4()}>
                   {item.productName} (Quantity: {item.quantity})
                 </li>
               ))}
