@@ -58,8 +58,10 @@ background-color: #ffffff; /* Example background color */
 
 .navbar-container{
   display: flex;
-  justify-content: space-between;
+  background-color: ##background_color#; /* Light pink background */
+  border-radius: 20px;
   margin: 6px 18px;
+  justify-content: center;
   position: relative;
 }
 .navbar-container img{
@@ -121,7 +123,7 @@ background-color: #ffffff; /* Example background color */
   right: -8px;
   font-size: 12px;
   color: #eee;
-  background-color:  #ff4081;
+  background-color:  ##border-color#;
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -173,7 +175,7 @@ background-color: #ffffff; /* Example background color */
   font-weight: 800;
   margin-top: 6px;
   font-size: 24px;
-  color: #ff4081;
+  color: ##border-color#;
   text-align: center;
 
 }
@@ -183,7 +185,7 @@ background-color: #ffffff; /* Example background color */
   background-size: cover; /* Ensures the image covers the entire div */
   background-position: center; /* Centers the image within the div */
   background-repeat: no-repeat; /* Prevents the image from repeating */
-  background-color: #ff4081;
+  background-color: ##border-color#;
   padding: 20px;
   border-radius: 15px;
   position: relative;
@@ -201,7 +203,7 @@ background-color: #ffffff; /* Example background color */
 .hero-banner-container button{
   border-radius: 15px;
   padding: 10px 16px;
-  background-color: #ff4081;
+  background-color: ##border-color#;
   color: white;
   border: none;
   position: relative;
@@ -213,12 +215,12 @@ background-color: #ffffff; /* Example background color */
 
 .hero-banner-container h3{
   font-size: 4rem;
-  color: #ff4081;
+  color: ##border-color#;
 
   margin-top: 4px;
 }
 .hero-banner-container h1{
-  color: #ff4081;
+  color: ##border-color#;
   padding-left: 5%;
   padding-top: 5%;
   font-size: 10em;
@@ -262,14 +264,14 @@ text-align: end;
 .products-heading{
   text-align: center;
   margin: 40px 0px;
- color: #ff6fae;
+ color: ##color3#;
  font-family: 'MyFont' !important;
 }
 
 .category-title{
   text-align: center;
   margin: 40px 0px;
- color: #ff6fae;
+ color: ##color3#;
  font-size: 26px;
  font-family: 'MyFont' !important;
 }
@@ -293,7 +295,7 @@ text-align: end;
 }
 .footer-banner-container{
   padding:  40px;
-  background-color: #ff4081;
+  background-color: ##border-color#;
 
   border-radius: 15px;
   position: relative;
@@ -529,7 +531,7 @@ padding: 30px 65px;
 
 .product-detail-image{
   border-radius: 15px;
-   background-color: #ff4081;
+   background-color: ##border-color#;
 
   width: 400px;
   height: 400px;
@@ -557,7 +559,7 @@ padding: 30px 65px;
   background-color: #808080;
 }
 .reviews{
-  color:  #ff4081;
+  color:  ##border-color#;
   margin-top: 10px;
   display: flex;
   gap: 5px;
@@ -571,7 +573,7 @@ padding: 30px 65px;
 }
 
 .product-detail-desc h4{
-  color: #ff4081;
+  color: ##border-color#;
   margin-top: 10px;
 }
 .product-detail-desc p{
@@ -586,10 +588,10 @@ padding: 30px 65px;
   font-weight: 700 ;
   font-size: 26px;
   margin-top: 30px;
-  color: #ff4081 !important;
+  color: ##border-color# !important;
 }
 .price .old-price, .product-price .old-price, .price .old-price{
-  color:#ff4081;
+  color:##border-color#;
   text-decoration: line-through;
 }
 .product-detail-desc .quantity{
@@ -604,12 +606,12 @@ padding: 30px 65px;
 }
 .buttons .add-to-cart{
   padding: 10px 20px;
-  border: 1px solid  #ff4081 ;
+  border: 1px solid  ##border-color# ;
   margin-top: 40px;
   font-size: 18px;
   font-weight: 500;
   background-color: white;
-  color: #ff4081;
+  color: ##border-color#;
   cursor: pointer;
   width: 200px;
    transform: scale(1, 1);
@@ -622,7 +624,7 @@ padding: 30px 65px;
   width: 200px;
 
   padding: 10px 20px;
-  background-color:  #ff4081;
+  background-color:  ##border-color#;
   color: white;
   border: none;
   margin-top: 40px;
@@ -654,7 +656,7 @@ padding: 6px;
   font-size: 20px;
 }
 .quantity-desc .plus{
-  color: #ff4081;
+  color: ##border-color#;
 
 }
 
@@ -725,7 +727,7 @@ margin-top: 160px;
 }
 .success .description .email{
   margin-left: 5px;
-  color:  #ff4081;
+  color:  ##border-color#;
 }
 .product-max-qty{
   margin-top: 10px;
@@ -905,7 +907,7 @@ margin-top: 160px;
   .product-price{
     font-weight: 800;
     margin-top: 6px;
-    color:#ff4081;
+    color:##border-color#;
     text-align: center;
   
   }
@@ -969,7 +971,7 @@ margin-top: 160px;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background-color: #ffebf0; /* Light pink background */
+  background-color: ##background_color#; /* Light pink background */
   border-bottom: 2px solid #eee;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
@@ -991,8 +993,8 @@ margin-top: 160px;
 }
 
 .nav-links a:hover {
-  color: #ff4081; /* Change text color on hover */
-  border-color: #ff4081; /* Change border color to pink on hover */
+  color: ##border-color#; /* Change text color on hover */
+  border-color: ##border-color#; /* Change border color to pink on hover */
   transform: translateY(-3px); /* Add slight move effect on hover */
 }
 
@@ -1005,7 +1007,7 @@ margin-top: 160px;
     position: absolute;
     top: 60px;
     right: 0;
-    background-color: #ffebf0;
+    background-color: ##background_color#;
     width: 80%;
     max-width: 300px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -1030,7 +1032,7 @@ margin-top: 160px;
   
   .category-button {
     padding: 10px 20px;
-    background-color: #f0f0f0;
+    background-color: ##background_color#;
     border: none;
     cursor: pointer;
     border-radius: 5px;
@@ -1066,11 +1068,11 @@ margin-top: 160px;
 }
 
 .cart-icon:hover {
-  color: #ff4081;
+  color: ##border-color#;
 }
 
 .cart-item-qty {
-  background-color: #ff4081;
+  background-color: ##border-color#;
   color: #fff;
   border-radius: 50%;
   padding: 0.2rem 0.0rem;
@@ -1085,7 +1087,7 @@ margin-top: 160px;
 
 
 .menu-icon:hover {
-  color: #ff4081;
+  color: ##border-color#;
 }
 
 @media (max-width: 768px) {
@@ -1096,7 +1098,7 @@ margin-top: 160px;
     position: absolute;
     top: 60px;
     right: 0;
-    background-color: #ffebf0;
+    background-color: ##background_color#;
     width: 80%;
     max-width: 300px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -1165,6 +1167,7 @@ margin-top: 160px;
 /* Navigation Links */
 .nav-links {
   display: flex;
+  border-radius: 10px;
   gap: 2rem;
 }
 
@@ -1179,7 +1182,7 @@ margin-top: 160px;
 
 .nav-links a:hover {
   color: #fff;
-  background-color: #ff4081;
+  background-color: ##border-color#;
 }
 
 /* Mobile Styles */
@@ -1221,7 +1224,7 @@ margin-top: 160px;
 .productsSection h2 {
   font-size: 2.5rem;
   margin-bottom: 10px;
-  color: #e91e63; /* A vibrant pink shade */
+  color: ##color2#; /* A vibrant pink shade */
 }
 
 .productsSection p {
@@ -1256,7 +1259,7 @@ margin-top: 160px;
 .aboutSection h2 {
   text-align: center;
   margin: 40px 0px;
- color: #ff6fae;
+ color: ##color3#;
  font-size: 26px;
  font-family: 'MyFont' !important;
   font-size: 2.5rem;
@@ -1265,7 +1268,7 @@ margin-top: 160px;
 
 .aboutSection p {
   font-size: 1.1rem;
-  color: #ff6fae;
+  color: ##color3#;
   font-family: 'MyFont' !important;
 
   position: relative; /* Position relative to ensure the pseudo-elements are positioned correctly */
@@ -1289,12 +1292,12 @@ margin-top: 160px;
 
 .aboutSection::before {
   top: 0; /* Position at the top */
-  background: linear-gradient(to bottom, #fedcdb ,   #ff4081); /* Gradient from opaque to transparent */
+  background: linear-gradient(to bottom, ##color4# ,   ##border-color#); /* Gradient from opaque to transparent */
 }
 
 .aboutSection::after {
   bottom: 0; /* Position at the bottom */
-  background: linear-gradient(to top, #fedcdb, #ff4081); /* Gradient from opaque to transparent */
+  background: linear-gradient(to top, ##color4#, ##border-color#); /* Gradient from opaque to transparent */
 }
 /* Container for product colors */
 .product-colors {
@@ -1391,7 +1394,7 @@ margin-top: 160px;
   list-style: none;
   padding: 0;
   font-size: 1.1rem;
-  color: #ff4081;
+  color: ##border-color#;
 }
 
 .whyBuySection li {
@@ -1555,7 +1558,7 @@ margin-top: 160px;
 
 .category-button {
   padding: 10px 20px;
-  background-color: #f0f0f0;
+  background-color: ##background_color#;
   border: none;
   cursor: pointer;
   font-size: 0.7rem;
