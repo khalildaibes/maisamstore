@@ -1912,5 +1912,33 @@ h1 {
       position: fixed; 
       top: 10px;
        right: 10px;
-        z-index: 1000;
+      z-index: 1000;
     }
+
+    .product-card {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .image-container {
+      position: relative;
+    }
+    
+    .overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%; /* Matches the product image width */
+      height: 50%; /* 50% of the product image height */
+    }
+    
+    .sold-out-image {
+      width: 100%; /* Ensure it matches the width of the product image */
+      height: 100%; /* Adjust height to fit the container */
+      object-fit: contain; /* Ensures the image scales properly */
+    }
+    
