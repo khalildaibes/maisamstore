@@ -1,6 +1,3 @@
-
-
-
 const fs = require('fs');
 const path = require('path');
 
@@ -13,7 +10,8 @@ const createContentType = (contentTypeName, attributes) => {
     path.join(apiPath, 'controllers'),
     path.join(apiPath, 'services'),
     path.join(apiPath, 'routes'),
-    path.join(apiPath, 'content-types'),
+    path.join(apiPath, 'config'),
+    path.join(apiPath, 'models'), // for settings.json
     path.join(apiPath, 'content-types', `${contentTypeName}`),
   ];
 
@@ -25,44 +23,43 @@ const createContentType = (contentTypeName, attributes) => {
   });
 
   // Create the controller file
-  const controllerContent = `'use strict';
-  
+  const controllerContent = `
 /**
- * test controller
+ * ${contentTypeName} controller
  */
 
-import { factories } from '@strapi/strapi'
+import { factories } from '@strapi/strapi';
 
-export default factories.createCoreController('api::${contentTypeName.toLowerCase()}.${contentTypeName.toLowerCase()}');
-
-  `;
-  fs.writeFileSync(path.join(apiPath, 'controllers', `${contentTypeName}.js`), controllerContent);
+export default factories.createCoreController('api::${contentTypeName}.${contentTypeName}');
+`;
+  fs.writeFileSync(path.join(apiPath, 'controllers', `${contentTypeName}.ts`), controllerContent);
 
   // Create the service file
-  const serviceContent = `/**
- * test service
+  const serviceContent = `
+/**
+ * ${contentTypeName} service
  */
 
 import { factories } from '@strapi/strapi';
 
 export default factories.createCoreService('api::${contentTypeName}.${contentTypeName}');
-  `;
-  fs.writeFileSync(path.join(apiPath, 'services', `${contentTypeName}.js`), serviceContent);
+`;
+  fs.writeFileSync(path.join(apiPath, 'services', `${contentTypeName}.ts`), serviceContent);
 
-  // Create the route file
-  const routeContent = `/**
- * test router
+  // Create the router file
+  const routeContent = `
+/**
+ * ${contentTypeName} router
  */
 
 import { factories } from '@strapi/strapi';
 
-export default factories.createCoreRouter('api::${contentTypeName.toLowerCase()}.${contentTypeName.toLowerCase()}');
+export default factories.createCoreRouter('api::${contentTypeName}.${contentTypeName}');
+`;
+  fs.writeFileSync(path.join(apiPath, 'routes', `${contentTypeName}.ts`), routeContent);
 
-  `;
-  fs.writeFileSync(path.join(apiPath, 'routes', `${contentTypeName}.js`), routeContent);
-
-  // Create the model (content type definition)
-  const modelContent = {
+  // Create the schema (content type definition)
+  const schemaContent = {
     kind: "collectionType",
     collectionName: `${contentTypeName}s`,
     info: {
@@ -78,14 +75,81 @@ export default factories.createCoreRouter('api::${contentTypeName.toLowerCase()}
   };
 
   fs.writeFileSync(
-    path.join(apiPath, 'content-types', `${contentTypeName}`,`schema.json`),
+    path.join(apiPath, 'content-types', `${contentTypeName}`, `schema.json`),
+    JSON.stringify(schemaContent, null, 2)
+  );
+
+  // Create the model settings definition
+  const modelContent = {
+    collectionName: `${contentTypeName}`,
+    info: {
+      name: `${contentTypeName}`,
+      description: ""
+    },
+    options: {
+      draftAndPublish: false,
+      increments: true,
+      timestamps: true,
+      comment: ""
+    },
+    attributes: attributes,
+  };
+  fs.writeFileSync(
+    path.join(apiPath, 'models', `${contentTypeName}.settings.json`),
     JSON.stringify(modelContent, null, 2)
+  );
+
+  // Create the routes configuration
+  const routesConfig = {
+    routes: [
+      {
+        method: "GET",
+        path: `/${contentTypeName.toLowerCase()}s`,
+        handler: `${contentTypeName}.find`,
+        config: { policies: [] }
+      },
+      {
+        method: "GET",
+        path: `/${contentTypeName.toLowerCase()}s/count`,
+        handler: `${contentTypeName}.count`,
+        config: { policies: [] }
+      },
+      {
+        method: "GET",
+        path: `/${contentTypeName.toLowerCase()}s/:id`,
+        handler: `${contentTypeName}.findOne`,
+        config: { policies: [] }
+      },
+      {
+        method: "POST",
+        path: `/${contentTypeName.toLowerCase()}s`,
+        handler: `${contentTypeName}.create`,
+        config: { policies: [] }
+      },
+      {
+        method: "PUT",
+        path: `/${contentTypeName.toLowerCase()}s/:id`,
+        handler: `${contentTypeName}.update`,
+        config: { policies: [] }
+      },
+      {
+        method: "DELETE",
+        path: `/${contentTypeName.toLowerCase()}s/:id`,
+        handler: `${contentTypeName}.delete`,
+        config: { policies: [] }
+      }
+    ]
+  };
+
+  fs.writeFileSync(
+    path.join(apiPath, 'config', `routes.json`),
+    JSON.stringify(routesConfig, null, 2)
   );
 
   console.log(`Content Type '${contentTypeName}' created successfully!`);
 };
 
-// Define the attributes for the `orderDetails` content type
+// Define the attributes for the `orderdetails` content type
 const orderDetailsAttributes = {
   status: {
     type: 'string',
@@ -130,9 +194,9 @@ const orderDetailsAttributes = {
     required: true,
   },
   cart: {
-    type: 'json', // Use JSON type to represent the nested array structure for `cart`
+    type: 'json',
   },
 };
 
-// Call the function to create a new content type named 'orderDetails'
+// Call the function to create a new content type named 'orderdetails'
 createContentType('orderdetails', orderDetailsAttributes);
