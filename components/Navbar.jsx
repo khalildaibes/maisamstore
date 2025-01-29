@@ -104,7 +104,7 @@ const Navbar = () => {
       {/* Logo */}
       <Link href="/" passHref>
         <img
-          src="/maisamnakeuplogo.png"
+          src="/Red and Black Retro Barbershop Logo.png"
           className="logo-img"
           alt="Logo"
           style={{ cursor: 'pointer' }}
