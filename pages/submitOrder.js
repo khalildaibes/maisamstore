@@ -103,8 +103,8 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
 
   
   const addOrder = async () => {
-    // const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
-    const isStrapiClient = true;
+    const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
+    // const isStrapiClient = true;
     const orderData = {
       status: 'Pending',
       cost: totalWithDelivery,

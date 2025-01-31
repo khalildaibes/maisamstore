@@ -104,7 +104,7 @@ const Navbar = () => {
       {/* Logo */}
       <Link href="/" passHref>
         <img
-          src="/maisamnakeuplogo.png"
+          src={process.env.NEXT_PUBLIC_LOGOFILE}
           className="logo-img"
           alt="Logo"
           style={{ cursor: 'pointer' }}

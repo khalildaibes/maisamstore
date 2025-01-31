@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { client as sanityClient } from '../lib/client';
-import { Product, FooterBanner, HeroBanner } from '../components';
 import translations from '../translations/translations';
 import { useStateContext } from '../context/StateContext';
 import { getImageUrl, fetchStrapiData } from '../lib/strapiClient'; // Adjust the path as necessary
 import Link from 'next/link';
-import { FaFilter } from 'react-icons/fa';
 
 const Home = ({ products, bannerData, brands }) => {
   const { language } = useStateContext();
-  const [selectedCategory, setSelectedCategory] = useState('all');
   const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
-
-  const maisamMakeupBrand = brands.find((brand) => brand.name === "Maisam Makeup");
-  const sephora = brands.find((brand) => brand.name === "SEPHORA");
 
   return (
     <>
@@ -25,22 +19,9 @@ const Home = ({ products, bannerData, brands }) => {
       {/* Brands Section */}
       <div className="brands-section">
         <div className="brands-container">
-          {maisamMakeupBrand && (
-            <Link key={`Link_${maisamMakeupBrand.id || maisamMakeupBrand._id}`} href={`/catgeory_products?categoryName=${maisamMakeupBrand.name}`}>
-              <div key={maisamMakeupBrand.id || maisamMakeupBrand._id} className="brand-item">
-                <div className="brand-image-container">
-                  <img
-                    src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + maisamMakeupBrand.image[0].url : getImageUrl(maisamMakeupBrand.image[0])}
-                    alt={maisamMakeupBrand.name}
-                    className="brand-image"
-                  />
-                  <div className="brand-name">{maisamMakeupBrand.name}</div>
-                </div>
-              </div>
-            </Link>
-          )}
+          
 
-          {brands.filter((brand) => brand.name !== "Maisam Makeup" && brand.name !== "SEPHORA").map((brand) => (
+          {brands.map((brand) => (
             <Link key={`Link_${brand.id || brand._id}`} href={`/catgeory_products?categoryName=${brand.name}`}>
               <div key={brand.id || brand._id} className="brand-item">
                 <div className="brand-image-container">
@@ -65,7 +46,7 @@ const Home = ({ products, bannerData, brands }) => {
       </div>
 
       {/* Testimonials Section */}
-      <div className='testimonialsSection'>
+      <div className='testimonialsSection' >
         <h2>{translations[language].testimonialsTitle}</h2>
         <div className='testimonials'>
           <div className='testimonial'>
@@ -95,6 +76,7 @@ const Home = ({ products, bannerData, brands }) => {
 
 // Fetch data for Strapi or Sanity based on environment variable
 export const getServerSideProps = async () => {
+  
   if (process.env.STRAPI_CLIENT === 'true') {
     try {
       const productsData = await fetchStrapiData('/products', { 'pagination[pageSize]': 100, 'populate': '*' });

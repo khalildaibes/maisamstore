@@ -9,14 +9,22 @@ import { Toaster } from 'react-hot-toast'; //Adding pop-up
 
 
 function MyApp({ Component, pageProps }) {
-  return ( 
-    //Using <StateContext /> as a wrapper here makes it available across the entire application
+  return (
+    <>
+      <style jsx global>{`
+        :root {
+          --primary-color: ${process.env.NEXT_PUBLIC_PRIMARY_COLOR};
+          --secondary-color: ${process.env.NEXT_PUBLIC_SECONDARY_COLOR};
+        }
+      `}</style>
+    <StateContext /> 
     <StateContext> 
     <Layout> 
       <Toaster />
       <Component { ...pageProps} />
     </Layout>
     </StateContext>
+    </>
   )
 }
 export default MyApp
