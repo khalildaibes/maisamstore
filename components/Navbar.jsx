@@ -115,12 +115,12 @@ const Navbar = () => {
       <nav className="navbar">
         <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
           <Link href="/brands">{translations[language].brands}</Link>
-          <Link href="/catgeory_products?categoryName=Face">{translations[language].face}</Link>
-          <Link href="/catgeory_products?categoryName=Cheeks">{translations[language].cheeks}</Link>
-          <Link href="/catgeory_products?categoryName=Eyes">{translations[language].eyes}</Link>
-          <Link href="/catgeory_products?categoryName=Lips">{translations[language].lips}</Link>
-          <Link href="/catgeory_products?categoryName=Hair">{translations[language].hair}</Link>
-        </div>
+           <Link href="/catgeory_products?categoryName=hairCare">{translations[language].hairCare}</Link>
+           <Link href="/catgeory_products?categoryName=hairStyling">{translations[language].hairStyling}</Link>
+           <Link href="/catgeory_products?categoryName=skinCare">{translations[language].skinCare}</Link>
+           <Link href="/catgeory_products?categoryName=hairTools">{translations[language].hairTools}</Link>
+           <Link href="/catgeory_products?categoryName=grooming">{translations[language].grooming}</Link>
+           <Link href="/catgeory_products?categoryName=electricShavers">{translations[language].electricShavers}</Link>  </div>
       </nav>
 
       {/* Accessibility Button */}
