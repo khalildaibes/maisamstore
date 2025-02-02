@@ -26,7 +26,7 @@ const Home = ({ brands }) => {
                 <div className="brand-image-container">
                 
                   <img
-                    src={`http://209.38.231.156:1337/` + brand.image[0].url}
+                    src={`https://server.yousef-style.shop` + brand.image[0].url}
                     alt={brand.name}
                     className="brand-image"
                   />
