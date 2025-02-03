@@ -41,28 +41,28 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     orderDetails.address = `${orderDetails.city}, ${orderDetails.street}`;
-
+  
     // Validate form fields
     if (!orderDetails.name || !orderDetails.phoneNumber || !orderDetails.address) {
       alert('Please fill out all required fields.');
       return;
     }
-
+  
     const phoneNumberRegex = /^05\d{8}$/;
     if (!phoneNumberRegex.test(orderDetails.phoneNumber)) {
       alert('Please enter a valid phone number starting with "05" and exactly 10 digits.');
       return;
     }
-
+  
     if (orderDetails.retypephoneNumber !== orderDetails.phoneNumber) {
       alert('Retyped phone number must match the phone number.');
       return;
     }
-
+  
     if (!window.confirm('Are you sure you want to submit the order?')) {
       return;
     }
-
+  
     // Check storage status
     const status = await checkStorage();
     if (status) {
@@ -72,7 +72,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       sendEmail();
       setOrderSubmitted(true);
     }
-    else {
+    else{
       console.log("what ?")
     }
   };
@@ -101,7 +101,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
   };
 
 
-
+  
   const addOrder = async () => {
     // const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
     const isStrapiClient = true;
@@ -124,11 +124,11 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
         _key: uuidv4(),
       })),
     };
-
+  
     try {
       if (isStrapiClient) {
         // Create the order in Strapi
-        const response = await addStrapiData('/Orderdetailss', orderData);
+        const response = await addStrapiData('/Orderdetailss',  orderData);
         console.log('Order saved to Strapi:', response.data);
       } else {
         // Create the order in Sanity
@@ -143,7 +143,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       alert('Failed to save order. Please try again.');
     }
   };
-
+  
   const checkStorage = async () => {
     let status = true;
     const isStrapiClient = true;
@@ -153,13 +153,16 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       cartItems.map(async (item) => {
         let product;
         console.log("tryong to buy", item)
-
+  
         if (isStrapiClient) {
           // Fetch product data from Strapi
           try {
-            const productData = await fetchStrapiData('/products', {  'filters': { 'documentId': { $eq: item.documentId } } });
-
-
+          const productData = await fetchStrapiData('/products', {
+                'pagination[pageSize]': 100,
+                'populate': '*',
+                'filters[documentId][$eq]': item.documentId, // Adjust the field and value as needed
+                      });
+            
             product = productData.data; // Assuming Strapi's response structure
           } catch (error) {
             console.error('Error fetching product from Strapi:', error);
@@ -175,14 +178,14 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
             console.error('Error fetching product from Sanity:', error);
           }
         }
-
+  
         if (!product || product.quantity < item.quantity) {
           alert(translations[language].soldOut.replace('${item.name}', item.name));
           status = false;
         }
       })
     );
-
+  
     return status;
   };
 
@@ -307,7 +310,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
               {cartItems.map((item) => (
                 <div className="product" key={item._id || item.id}>
                   <img
-                    src={isStrapiClient ? `https://server.yousef-style.shop${item.image[0].url}` : getImageUrl(item.image[0])}
+                    src={isStrapiClient ?  `https://server.yousef-style.shop${item.image[0].url}` : getImageUrl(item.image[0])}
                     alt={item.name}
                     className="cart-product-image"
                   />
@@ -346,11 +349,11 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
           <div className="product-container">
             {cartItems.map((item) => (
               <div className="product" key={item._id}>
-                <img
-                  src={isStrapiClient ? `https://server.yousef-style.shop${item.image[0].url}` : getImageUrl(item.image[0])}
-                  alt={item.name}
-                  className="cart-product-image"
-                />
+              <img
+                    src={isStrapiClient ?  `https://server.yousef-style.shop${item.image[0].url}` : getImageUrl(item.image[0])}
+                    alt={item.name}
+                    className="cart-product-image"
+                  />
                 <div className="item-desc">
                   <div className="flex top">
                     <h5>{item.name}</h5>
