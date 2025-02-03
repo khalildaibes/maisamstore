@@ -157,7 +157,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
         if (isStrapiClient) {
           // Fetch product data from Strapi
           try {
-            const productData = await fetchStrapiData('/products', { 'pagination[pageSize]': 100, 'filters': { 'documentId': { $eq: item.documentId } } });
+            const productData = await fetchStrapiData('/products', {  'filters': { 'documentId': { $eq: item.documentId } } });
 
 
             product = productData.data; // Assuming Strapi's response structure
