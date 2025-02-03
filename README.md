@@ -183,3 +183,7 @@ For any further questions or issues, feel free to contact the support team at `s
 
 --- 
 
+
+
+
+https://forum.strapi.io/t/well-known-folder/21720/2

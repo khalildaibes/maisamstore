@@ -20,7 +20,7 @@ const Product = ({ product: { image, name, slug, price} }) => {
         <img
       src={
         isStrapiClient
-          ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${image[0].url}`
+          ? `https://server.yousef-style.shop${image[0].url}`
           : getImageUrl(image[0])
       }
       alt={name}

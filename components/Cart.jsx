@@ -81,7 +81,7 @@ const Cart = () => {
             cartItems.map((item) => (
               <div className="product" key={item._id}>
                 <img
-                  src={getImageUrl(item?.image[0])}
+                    src={`https://server.yousef-style.shop${item.image[0].url}`}
                   className="cart-product-image"
                 />
                 <div className="item-desc">

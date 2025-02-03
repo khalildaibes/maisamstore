@@ -102,7 +102,7 @@ const ProductDetails = ({ productData, products }) => {
             {product.image?.map((item, i) => (
               <img
                 key={i}
-                src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + item.url : getImageUrl(item)}
+                src={isStrapiClient ? `https://server.yousef-style.shop${item.url}` : getImageUrl(item)}
                 className={i === index && !isVideoSelected ? 'small-image selected-image' : 'small-image'}
                 onClick={() => { setIndex(i); setIsVideoSelected(false); }}
                 alt={`Product image ${i + 1}`}

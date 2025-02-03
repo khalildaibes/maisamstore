@@ -308,7 +308,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
               {cartItems.map((item) => (
                 <div className="product" key={item._id || item.id}>
                   <img
-                    src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + item.image[0].url : getImageUrl(item.image[0])}
+                    src={isStrapiClient ?  `https://server.yousef-style.shop${item.image[0].url}` : getImageUrl(item.image[0])}
                     alt={item.name}
                     className="cart-product-image"
                   />
@@ -348,7 +348,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
             {cartItems.map((item) => (
               <div className="product" key={item._id}>
               <img
-                    src={isStrapiClient ? process.env.NEXT_PUBLIC_STRAPI_API_URL + item.image[0].url : getImageUrl(item.image[0])}
+                    src={isStrapiClient ?  `https://server.yousef-style.shop${item.image[0].url}` : getImageUrl(item.image[0])}
                     alt={item.name}
                     className="cart-product-image"
                   />
