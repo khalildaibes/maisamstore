@@ -5,6 +5,7 @@ import { fetchStrapiData, getImageUrl, strapiClient, addStrapiData } from "../li
 import translations from '../translations/translations';
 import emailjs from 'emailjs-com';
 import { v4 as uuidv4 } from 'uuid';
+import axios from "axios";
 const SubmitOrder = ({ products, bannerData, brands }) => {
   const { cartItems, totalPrice, totalQuantities, language, clearCart } = useStateContext();
 
@@ -143,7 +144,24 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       alert('Failed to save order. Please try again.');
     }
   };
-  
+
+
+const fetchProducts = async () => {
+  try {
+    const response = await fetch("/api/products?populate=*"); // Calls the API route
+    if (!response.ok) throw new Error("Failed to fetch products");
+
+    const data = await response.json();
+    console.log("Fetched Products:", data); // Debugging
+
+    return data.data; // Ensure proper data extraction
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+};
+
+ 
   const checkStorage = async () => {
     let status = true;
     const isStrapiClient = true;
@@ -157,13 +175,8 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
         if (isStrapiClient) {
           // Fetch product data from Strapi
           try {
-          const productData = await fetchStrapiData('/products', {
-                'pagination[pageSize]': 100,
-                'populate': '*',
-                'filters[documentId][$eq]': item.documentId, // Adjust the field and value as needed
-                      });
-            
-            product = productData.data; // Assuming Strapi's response structure
+          const products = await fetchProducts();
+          product = products.find(p => p.id === item.id); // Match product by ID
           } catch (error) {
             console.error('Error fetching product from Strapi:', error);
           }

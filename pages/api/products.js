@@ -1,17 +1,27 @@
 export default async function handler(req, res) {
+  const { method, query } = req;
+  const apiUrl = `https://server.yousef-style.shop/api/products`;
+
+  if (method !== "GET") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+
   try {
-    var url= 'server.yousef-style.shop' 
-    
-    const response = await fetch(`${url}/api/products`, {
+    const controller = new AbortController(); // Create a timeout controller
+    const timeout = setTimeout(() => controller.abort(), 10000); // Set 10s timeout
+
+    const response = await fetch(apiUrl, {
+      signal: controller.signal, // Attach timeout signal
       headers: {
-        withCredentials: true, // Required for authentication
         "Content-Type": "application/json",
         Authorization: `Bearer 8e185963b4142a43003e224f0e93c359c71a9c07824f9ce25cdb703a41f91e8e354b280c4c6f420439c56a2c080cc8e60bfdddbb1c5146824519651f63bcf3af3ec0ea3a12f7f305f61c8d0e0291b5ab633be185c48ef7ebda624cf8245a3484872bf7a4e4b7790a5fafb50eb4b655a4ed49906da0383c3cfb3cb688cf47d671`,
       },
     });
 
+    clearTimeout(timeout); // Clear timeout after success
+
     if (!response.ok) {
-      throw new Error("Failed to fetch products");
+      throw new Error(`Failed to fetch products: ${response.statusText}`);
     }
 
     const data = await response.json();
