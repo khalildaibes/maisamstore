@@ -69,7 +69,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       // Add order to database
       await addOrder();
       // TODO: chnage email sending  mechanisoim
-      // sendEmail();
+      sendEmail();
       setOrderSubmitted(true);
     }
     else{
@@ -80,7 +80,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
   const sendEmail = () => {
     orderDetails.subtotal = totalWithDelivery;
     const message = {
-      "to_name": "khalilok",
+      "to_name": "Khalil & yousef",
       "from_name": "new order",
       "totalWithDelivery": totalWithDelivery,
       "buyername": orderDetails.name,
@@ -90,7 +90,7 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
         `).join("                         ") + "   " + JSON.stringify(orderDetails, null, 2),
     };
 
-    emailjs.send('service_fiv09zs', 'template_t2r5twb', message, 'XNc8KcHCQwchLLHG5')
+    emailjs.send('service_fiv09zs', 'template_gtronog', message, 'XNc8KcHCQwchLLHG5')
       .then((response) => {
         console.log('SUCCESS!', response.status, response.text);
         alert('Thank you for your purchase!');
