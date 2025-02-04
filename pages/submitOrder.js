@@ -70,8 +70,8 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       // Add order to database
       await addOrder();
       // TODO: chnage email sending  mechanisoim
-      sendEmail();
-      setOrderSubmitted(true);
+      // sendEmail();
+      // setOrderSubmitted(true);
     }
     else{
       console.log("what ?")
@@ -103,47 +103,49 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
 
 
   
-  const addOrder = async () => {
-    // const isStrapiClient = process.env.STRAPI_CLIENT === 'true';
-    const isStrapiClient = true;
-    const orderData = {
-      status: 'Pending',
-      cost: totalWithDelivery,
-      phoneNumber: orderDetails.phoneNumber,
-      name: orderDetails.name,
-      addressType: orderDetails.addressType,
-      address: orderDetails.address,
-      street: orderDetails.street,
-      city: orderDetails.city,
-      paymentMethod: orderDetails.paymentMethod,
-      notes: orderDetails.notes || '',
-      subtotal: totalPrice,
-      cart: cartItems.map(item => ({
-        productName: item.name,
-        quantity: item.quantity,
-        price: item.price,
-        _key: uuidv4(),
-      })),
-    };
-  
-    try {
-      if (isStrapiClient) {
-        // Create the order in Strapi
-        const response = await addStrapiData('/Orderdetailss',  orderData);
-        console.log('Order saved to Strapi:', response.data);
-      } else {
-        // Create the order in Sanity
-        await sanityClient.create({
-          _type: 'orderDetails',
-          ...orderData,
-        });
-        console.log('Order saved to Sanity');
-      }
-    } catch (error) {
-      console.error('Error saving order:', error);
-      alert('Failed to save order. Please try again.');
-    }
+const addOrder = async () => {
+  const orderData = {
+    status: "Pending",
+    cost: totalWithDelivery,
+    phoneNumber: orderDetails.phoneNumber,
+    name: orderDetails.name,
+    addressType: orderDetails.addressType,
+    address: orderDetails.address,
+    street: orderDetails.street,
+    city: orderDetails.city,
+    paymentMethod: orderDetails.paymentMethod,
+    notes: orderDetails.notes || "",
+    subtotal: totalPrice,
+    cart: cartItems.map(item => ({
+      productName: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      _key: uuidv4(),
+    })),
   };
+
+  try {
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: {
+        
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to save order: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("Order saved:", data);
+    alert("Order placed successfully!");
+  } catch (error) {
+    console.error("Error saving order:", error);
+    alert("Failed to save order. Please try again.");
+  }
+};
 
 
 const fetchProducts = async () => {
