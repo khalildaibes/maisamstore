@@ -70,8 +70,8 @@ const SubmitOrder = ({ products, bannerData, brands }) => {
       // Add order to database
       await addOrder();
       // TODO: chnage email sending  mechanisoim
-      // sendEmail();
-      // setOrderSubmitted(true);
+      sendEmail();
+      setOrderSubmitted(true);
     }
     else{
       console.log("what ?")
@@ -128,7 +128,7 @@ const addOrder = async () => {
     const response = await fetch("/api/orders", {
       method: "POST",
       headers: {
-        
+
         "Content-Type": "application/json",
       },
       body: JSON.stringify(orderData),
