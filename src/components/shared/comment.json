@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_shared_comments",
+  "info": {
+    "displayName": "Comment",
+    "icon": "layout",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "body": {
+      "type": "text"
+    },
+    "date": {
+      "type": "datetime"
+    },
+    "admin_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "admin::user"
+    },
+    "likes": {
+      "type": "integer"
+    }
+  }
+}
