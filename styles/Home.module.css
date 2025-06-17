@@ -116,3 +116,380 @@
     flex-direction: column;
   }
 } */
+
+.wafaaBeautyHome {
+  overflow-x: hidden;
+  background: var(--secondary);
+}
+
+/* Hero Section */
+.heroSection {
+  height: 100vh;
+  background: linear-gradient(rgba(231, 84, 128, 0.3), rgba(255, 246, 250, 0.7)), url('/images/hero-bg.jpg') center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--dark);
+}
+
+.heroContent {
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.heroContent h1 {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--primary);
+  text-shadow: 2px 2px 0 var(--light), 0 2px 8px var(--accent);
+}
+
+.heroContent p {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  color: var(--dark);
+}
+
+.ctaButton {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background-color: var(--primary);
+  color: var(--light);
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 24px var(--accent);
+  border: none;
+  transition: all 0.3s cubic-bezier(.4,2,.3,1);
+}
+
+.ctaButton:hover {
+  background: var(--dark);
+  color: var(--primary);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 10px 30px var(--primary);
+}
+
+/* Featured Categories */
+.featuredCategories {
+  padding: 5rem 2rem 3rem 2rem;
+  background: var(--light);
+}
+
+.featuredCategories h2,
+.bestSellers h2,
+.brandStory h2,
+.testimonials h2,
+.socialMedia h2,
+.newsletter h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 1px;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.categoryCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 5px 24px rgba(231, 84, 128, 0.08);
+  background: var(--secondary);
+  transition: box-shadow 0.3s;
+}
+
+.categoryCard:hover {
+  box-shadow: 0 10px 32px var(--accent);
+}
+
+.categoryImage {
+  position: relative;
+  padding-top: 100%;
+}
+
+.categoryImage img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(.4,2,.3,1);
+}
+
+.categoryOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, var(--primary));
+  padding: 1.5rem;
+  color: var(--light);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+/* Best Sellers Section */
+.bestSellers {
+  padding: 4rem 2rem 3rem 2rem;
+  background: var(--secondary);
+}
+
+.productsSlider {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.productCard {
+  background: var(--light);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 5px 24px var(--accent);
+  transition: box-shadow 0.3s;
+  text-align: center;
+}
+
+.productCard img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.productCard h3 {
+  padding: 1rem 0 0.5rem 0;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.productCard .price {
+  padding: 0 0 1rem 0;
+  color: var(--dark);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Brand Story Section */
+.brandStory {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--light);
+  border-radius: 24px;
+  box-shadow: 0 5px 24px var(--accent);
+}
+
+.storyContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.storyContent h2 {
+  color: var(--primary);
+}
+
+.storyContent p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--dark);
+}
+
+.storyImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px var(--accent);
+}
+
+/* Testimonials Section */
+.testimonials {
+  padding: 5rem 2rem;
+  background: var(--secondary);
+}
+
+.testimonialsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonialCard {
+  background: var(--light);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 5px 24px var(--accent);
+  text-align: left;
+}
+
+.testimonialAuthor {
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.testimonialAuthor img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  border: 2px solid var(--primary);
+}
+
+/* Social Media Section */
+.socialMedia {
+  padding: 5rem 2rem;
+  background: var(--light);
+}
+
+.socialGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.socialCard {
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  border-radius: 16px;
+  color: var(--light);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 24px var(--accent);
+}
+
+.socialCard:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 32px var(--primary);
+}
+
+.socialCard svg {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.instagram {
+  background: linear-gradient(45deg, #e75480, #f7c5cc);
+}
+
+.tiktok {
+  background: #000000;
+}
+
+.youtube {
+  background: #FF0000;
+}
+
+/* Newsletter Section */
+.newsletter {
+  padding: 5rem 2rem;
+  background: var(--secondary);
+  text-align: center;
+}
+
+.newsletterContent {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.newsletterForm {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.newsletterForm input {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 30px;
+  font-size: 1rem;
+  background: var(--light);
+}
+
+.newsletterForm button {
+  padding: 1rem 2rem;
+  background-color: var(--primary);
+  color: var(--light);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.newsletterForm button:hover {
+  background-color: var(--dark);
+  color: var(--primary);
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .brandStory {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContent h1 {
+    font-size: 2.2rem;
+  }
+  .brandStory {
+    grid-template-columns: 1fr;
+  }
+  .newsletterForm {
+    flex-direction: column;
+  }
+  .newsletterForm button {
+    width: 100%;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animateIn {
+  animation: fadeIn 0.5s ease forwards;
+}

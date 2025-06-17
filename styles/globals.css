@@ -1,3 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+  font-family: 'Poppins', Arial, sans-serif;
+  background: var(--secondary);
+  color: var(--dark);
+}
+
+:root {
+  --primary: #b89b8c;
+  --secondary: #f3e7e1;
+  --accent: #d6b6a4;
+  --dark: #3a2c23;
+  --light: #fff;
+}
 
 @font-face {
   font-family: 'MyFont';
@@ -16,13 +31,13 @@ body, * {
 }
 h1, h2, h3 {
   color: white; /* Text color inside the stroke */
-  -webkit-text-stroke: 1px #c2185b; /* Stroke size and color (dark pink) */
-  text-stroke: 1px #c2185b; /* Fallback property for non-WebKit browsers */
+  -webkit-text-stroke: 1px 3a2c23; /* Stroke size and color (dark pink) */
+  text-stroke: 1px 3a2c23; /* Fallback property for non-WebKit browsers */
   text-shadow: 
-    -1px -1px 0 #c2185b, /* Top left shadow */
-     1px -1px 0 #c2185b, /* Top right shadow */
-    -1px  1px 0 #c2185b, /* Bottom left shadow */
-     1px  1px 0 #c2185b; /* Bottom right shadow */
+    -1px -1px 0 3a2c23, /* Top left shadow */
+     1px -1px 0 3a2c23, /* Top right shadow */
+    -1px  1px 0 3a2c23, /* Bottom left shadow */
+     1px  1px 0 3a2c23; /* Bottom right shadow */
 }
 .logo-img {
   width: 120px;
@@ -196,7 +211,7 @@ background-color: #ffffff; /* Example background color */
 }
 .hero-banner-container .small-desc{
   font-size: 20px;
-  color: #c2185b;
+  color: 3a2c23;
   font-family: 'MyFont' !important;
 
 }
@@ -244,11 +259,11 @@ position: absolute;
 font-weight: bolder; /* Makes the text bold */
 left: 20%;
 bottom: 5%;
-color: #c2185b;
+color: 3a2c23;
 
 }
 .desc p{
-  color: #c2185b;
+  color: 3a2c23;
   font-weight: 100;
   
 text-align: end;
@@ -288,7 +303,7 @@ text-align: end;
   font-family: 'MyFont' !important;
 }
 .products-heading p{
-  color: #c2185b;
+  color: 3a2c23;
   font-size: 16px;
   font-weight: 200;
   
@@ -313,7 +328,7 @@ text-align: end;
   border-radius: 15px;
   padding: 10px 16px;
   background-color: white;
-  color: #c2185b;
+  color: 3a2c23;
   border: none;
   margin-top: 40px;
   font-size: 18px;
@@ -420,7 +435,7 @@ text-align: end;
 }
 .product-container{
   margin-top: 15px;
-  color: #c2185b;
+  color: 3a2c23;
 
   overflow: auto;
 max-height: 70vh;
@@ -440,7 +455,7 @@ padding: 20px 20px;
   display: flex;
   justify-content: space-between;
   width: 350px;
-  color: #c2185b  !important;;
+  color: 3a2c23  !important;;
   
 
 }
@@ -448,7 +463,7 @@ padding: 20px 20px;
   display: inline;
   justify-content: space-between;
   width: 350px;
-  color: #c2185b;
+  color: 3a2c23;
 }
 
 
@@ -458,12 +473,12 @@ padding: 20px 20px;
 }
 .flex h5{
   font-size: 24px;
-  color: #c2185b;
+  color: 3a2c23;
 
 }
 .flex h5{
   font-size: 20px;
-  color: #c2185b;
+  color: 3a2c23;
 
 }
 .total{
@@ -497,7 +512,7 @@ padding: 30px 65px;
 .btn-container{
   width: 400px;
   margin: auto;
-  color: #c2185b;
+  color: 3a2c23;
 
 }
 .btn{
@@ -510,7 +525,7 @@ padding: 30px 65px;
   margin-top: 10px;
   margin-top: 40px;
   text-transform: uppercase;
-  background-color:     #c2185b;
+  background-color:     3a2c23;
 
   color: #fff;
   cursor: pointer;
@@ -839,7 +854,7 @@ margin-top: 160px;
   }
   .product-container{
     margin-top: 10px;
-    color: #c2185b;
+    color: 3a2c23;
   }
   .product{
     padding: 20px 5px;
@@ -926,7 +941,7 @@ margin-top: 160px;
 }
 .flex h5{
   font-size: 16px;
-  color: #c2185b;
+  color: 3a2c23;
 }
 .flex h4{
   font-size: 16px;
@@ -1387,7 +1402,7 @@ margin-top: 160px;
 .whyBuySection h2 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #c2185b; /* A bold orange shade */
+  color: 3a2c23; /* A bold orange shade */
 }
 
 .whyBuySection ul {

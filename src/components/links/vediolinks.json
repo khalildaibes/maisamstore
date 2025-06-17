@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_links_vediolinkss",
+  "info": {
+    "displayName": "VedioLinks",
+    "icon": "layout",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}
