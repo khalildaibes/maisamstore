@@ -19,7 +19,7 @@ const Success = () => {
         setTotalPrice(0); // Setting total price in cart to 0 
         setTotalQuantities(0); // Setting total products in cart to 0 
         runFireworks(); // Firework confetti work
-    }, []);
+    }, [setCartItems, setTotalPrice, setTotalQuantities]);
     const [order, setOrder] = useState(null); 
 
   return (

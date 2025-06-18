@@ -102,7 +102,7 @@ const Home = ({ brands, featuredProducts, testimonials }) => {
       <section className={styles.brandStory}>
         <div className={styles.storyContent}>
           <h2>Our Story</h2>
-          <p>Wafaa Beauty is more than just a beauty brand - it's a celebration of natural beauty and self-expression. Our products are crafted with care, using only the finest ingredients to enhance your natural radiance.</p>
+          <p>Wafaa Beauty is more than just a beauty brand - it&apos;s a celebration of natural beauty and self-expression. Our products are crafted with care, using only the finest ingredients to enhance your natural radiance.</p>
         </div>
         <div className={styles.storyImage}>
           <img src="/images/brand-story.jpg" alt="Wafaa Beauty Story" />

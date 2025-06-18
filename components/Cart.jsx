@@ -83,6 +83,7 @@ const Cart = () => {
                 <img
                     src={`https://server.yousef-style.shop${item.image[0].url}`}
                   className="cart-product-image"
+                  alt={item.name}
                 />
                 <div className="item-desc">
                   <div className="flex top">
