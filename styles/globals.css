@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
   font-family: 'Poppins', Arial, sans-serif;
@@ -30,13 +31,13 @@ body, * {
 }
 h1, h2, h3 {
   color: white; /* Text color inside the stroke */
-  -webkit-text-stroke: 1px #c2185b; /* Stroke size and color3a2c23pink) */
-  text-stroke: 1px #c2185b; /* Fallback property for 3a2c23Kit browsers */
+  -webkit-text-stroke: 1px #c2185b; /* Stroke size and color (dark pink) */
+  text-stroke: 1px #c2185b; /* Fallback property for non-WebKit browsers */
   text-shadow: 
     -1px -1px 0 #c2185b, /* Top left shadow */
-     3a2c23x 0 #c2185b, /* Top right shadow */
-    -3a2c23x 0 #c2185b, /* Bottom left shadow */
-    3a2c23px 0 #c2185b; /* Bottom right shadow */
+     1px -1px 0 #c2185b, /* Top right shadow */
+    -1px  1px 0 #c2185b, /* Bottom left shadow */
+     1px  1px 0 #c2185b; /* Bottom right shadow */
 }
 .logo-img {
   width: 120px;
@@ -72,7 +73,7 @@ background-color: #ffffff; /* Example background color */
 
 .navbar-container{
   display: flex;
-  background-color: #fce4ec; /* Light pink background */
+  background-color: ##background_color#; /* Light pink background */
   border-radius: 20px;
   margin: 6px 18px;
   justify-content: center;
@@ -220,7 +221,8 @@ background-color: #ffffff; /* Example background color */
   background-color: ##border-color#;
   color: white;
   border: none;
-  position: relative3a2c23t-size: 18px;
+  position: relative;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
   z-index:10000 !important;
@@ -276,9 +278,9 @@ text-align: end;
 }
 .products-heading{
   text-align: center;
-  margi3a2c23 0px;
+  margin: 40px 0px;
  color: ##color3#;
- f3a2c23ily: 'MyFont' !important;
+ font-family: 'MyFont' !important;
 }
 
 .category-title{
@@ -320,7 +322,7 @@ text-align: end;
 }
 .banner-desc{
   display: flex ;
- 3a2c23y-content: space-between;
+  justify-content: space-between;
 }
 .banner-desc button{
   border-radius: 15px;
@@ -347,7 +349,8 @@ text-align: end;
   left: 8%; */
   top: -25%;
   left: 25%;
-3a2c23er-desc .right{
+}
+.banner-desc .right{
   line-height: 1.4;
 }
 .banner-desc .right h3{
@@ -459,7 +462,8 @@ padding: 20px 20px;
 .item-desc .flex .top{
   display: inline;
   justify-content: space-between;
-  width: 3503a2c23olor: #c2185b;
+  width: 350px;
+  color: #c2185b;
 }
 
 
@@ -481,7 +485,7 @@ padding: 20px 20px;
   display: flex;
   justify-content: space-between;
   word-wrap: break-word; /* Allow long words to break */
-  white-space: normal; /* Make sure the text can wrap 3a2c23e next line */
+  white-space: normal; /* Make sure the text can wrap onto the next line */
 }
 .total h3{
   font-size: 22px;
@@ -492,19 +496,20 @@ padding: 20px 20px;
 }
 .remove-item{
   font-size: 24px;
-  color:  #808083a2c23rsor: pointer;
+  color:  #808080;
+  cursor: pointer;
   background: transparent;
   border: none;
 }
 .cart-bottom{
   position: absolute;
-  b3a2c2312px;
+  bottom: 12px;
 width: 80%;
 padding: 30px 65px;
 
 }
 
-.btn-c3a2c23r{
+.btn-container{
   width: 400px;
   margin: auto;
   color: #c2185b;
@@ -540,7 +545,7 @@ padding: 30px 65px;
 }
 
 .product-detail-image{
- 3a2c23-radius: 15px;
+  border-radius: 15px;
    background-color: ##border-color#;
 
   width: 400px;
@@ -553,7 +558,7 @@ padding: 30px 65px;
 
 }
 .small-images-container{
-  disp3a2c23ex;
+  display: flex;
   gap: 10px;
   margin-top: 20px;
 }
@@ -898,7 +903,7 @@ margin-top: 160px;
     max-height: 150px;
     text-align: center;
     border-radius: 15px;
-    vertical-align: middle; /* Handle som3a2c23ment edge cases */
+    vertical-align: middle; /* Handle some alignment edge cases */
    transform: translate(-50%, -50%);
    background-color: #ebebeb;
     transform: scale(1, 1);
@@ -998,7 +1003,7 @@ margin-top: 160px;
 .nav-links a {
   text-decoration: none;
   font-weight: 500;
-  padding:3a2c23 1rem;
+  padding: 0.5rem 1rem;
   white-space: nowrap; /* Prevent text from breaking into multiple lines */
 }
 
@@ -1497,7 +1502,10 @@ margin-top: 160px;
   width: 100px;
   height: 100px;
   object-fit: cover;
-  margin-right: 20px;3a2c23em-desc {
+  margin-right: 20px;
+}
+
+.item-desc {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
